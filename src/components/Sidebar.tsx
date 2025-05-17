@@ -1,6 +1,7 @@
 import React from 'react';
-import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight } from 'lucide-react';
+import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,38 +11,46 @@ interface SidebarProps {
 
 const menuItems = [
   {
+    id: 'dashboard',
+    icon: <LayoutDashboard size={20} />,
+    label: 'Dashboard',
+    path: '/dashboard',
+  },
+  {
     id: 'hygiene',
     icon: <MessageSquare size={20} />,
     label: 'Hygiene Tips',
-    prompt: 'Tell me about personal hygiene tips',
+    path: '/',
   },
   {
     id: 'kit',
     icon: <Package size={20} />,
     label: 'Free Kit Info',
-    prompt: 'How can I get a free hygiene kit?',
+    path: '/',
   },
   {
     id: 'products',
     icon: <ShoppingBag size={20} />,
     label: 'Add-On Products',
-    prompt: 'Show me available hygiene products',
+    path: '/',
   },
   {
     id: 'puberty',
     icon: <Heart size={20} />,
     label: 'Learn About Puberty',
-    prompt: 'Can you tell me about puberty?',
+    path: '/',
   },
   {
     id: 'wellness',
     icon: <Smile size={20} />,
     label: 'Wellness & Confidence',
-    prompt: 'Share some wellness and confidence tips',
+    path: '/',
   },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       {/* Mobile overlay */}
@@ -98,6 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
                   whileHover={{ x: 4 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
+                    navigate(item.path);
                     if (window.innerWidth < 1024) {
                       onClose();
                     }
