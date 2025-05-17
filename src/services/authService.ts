@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://mac-6666.izeeshan.dev';
+const API_BASE_URL = 'https://glt-chat-backend.izeeshan.dev';
 
 export interface RegisterData {
   email: string;
