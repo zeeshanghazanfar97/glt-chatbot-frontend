@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>New Order Notification - Girlz Love Tech Admin</title>
+    <style>
+        body { font-family: 'Quicksand', sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(to right, #FF6699, #FF85AD); padding: 20px; text-align: center; color: white; border-radius: 10px 10px 0 0; }
+        .content { background: #fff; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .order-details { background: #FFF0F6; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .user-details { background: #F0F0F0; padding: 15px; border-radius: 6px; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Order Notification</h1>
+        </div>
+        <div class="content">
+            <h2>New {{ order_type }} Order Received</h2>
+            
+            <div class="user-details">
+                <h3>User Information</h3>
+                <p><strong>Name:</strong> {{ user_name }}</p>
+                <p><strong>Email:</strong> {{ user_email }}</p>
+                <p><strong>Grade:</strong> {{ user_grade }}</p>
+                <p><strong>School:</strong> {{ user_school }}</p>
+            </div>
+
+            <div class="order-details">
+                <h3>Order Details</h3>
+                <p><strong>Order Number:</strong> {{ order_number }}</p>
+                <p><strong>Order Date:</strong> {{ order_date }}</p>
+                <p><strong>Shipping Address:</strong><br>
+                {{ shipping_address }}</p>
+                {% if order_type == "Custom" %}
+                <h3>Products Ordered:</h3>
+                <ul>
+                    {% for item in order_items %}
+                    <li>{{ item.quantity }}x {{ item.name }} - ${{ item.price }}</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>Total Amount:</strong> ${{ total_amount }}</p>
+                {% endif %}
+            </div>
+
+            <p>Please process this order according to our standard procedures.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 Girlz Love Tech - Admin Portal</p>
+        </div>
+    </div>
+</body>
+</html>
