@@ -18,14 +18,20 @@ const formVariants = {
   exit: { opacity: 0, y: -20 }
 };
 
+interface RegisterFormData extends RegisterData {
+  confirmPassword: string;
+}
+
 const Register: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<RegisterData>();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>();
   const { register: registerUser, error } = useAuth();
   const navigate = useNavigate();
+  const password = watch('password', '');
 
-  const onSubmit = async (data: RegisterData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
-      await registerUser(data);
+      const { confirmPassword, ...registerData } = data;
+      await registerUser(registerData);
       navigate('/login', { replace: true });
     } catch (err) {
       // Error is handled by AuthContext
@@ -189,6 +195,24 @@ const Register: React.FC = () => {
                 />
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  {...register('confirmPassword', { 
+                    required: 'Please confirm your password',
+                    validate: value => value === password || 'Passwords do not match'
+                  })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                  placeholder="Confirm your password"
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
                 )}
               </div>
 
