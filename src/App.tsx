@@ -6,6 +6,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/dashboard/Dashboard';
+import AdminDashboard from './components/admin/AdminDashboard';
 import { ChatProvider } from './context/ChatContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
@@ -49,6 +50,23 @@ const AnimatedRoutes = () => {
                 />
                 <div className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'}`}>
                   <Dashboard />
+                </div>
+              </div>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex">
+                <Sidebar 
+                  isOpen={isSidebarOpen} 
+                  onClose={() => setIsSidebarOpen(false)}
+                  onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
+                <div className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'}`}>
+                  <AdminDashboard />
                 </div>
               </div>
             </ProtectedRoute>

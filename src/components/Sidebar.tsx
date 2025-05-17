@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard } from 'lucide-react';
+import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,12 @@ const menuItems = [
     icon: <LayoutDashboard size={20} />,
     label: 'Dashboard',
     path: '/dashboard',
+  },
+  {
+    id: 'admin',
+    icon: <Settings size={20} />,
+    label: 'Admin Panel',
+    path: '/admin',
   },
   {
     id: 'hygiene',
