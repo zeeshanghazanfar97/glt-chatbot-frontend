@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Book, Package, Trophy, Clock, X, ChevronRight } from 'lucide-react';
+import { Book, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StatCardProps {
@@ -69,6 +69,47 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, title, child
     )}
   </AnimatePresence>
 );
+
+const mockBadges = [
+  {
+    id: 1,
+    title: 'Quick Learner',
+    description: 'Complete 5 lessons in a single day',
+    icon: <Zap size={24} />,
+    progress: 100,
+    earned: true,
+    earnedDate: '2024-03-10',
+    type: 'achievement'
+  },
+  {
+    id: 2,
+    title: 'Tech Explorer',
+    description: 'Try all available learning modules',
+    icon: <Brain size={24} />,
+    progress: 60,
+    earned: false,
+    type: 'progress'
+  },
+  {
+    id: 3,
+    title: 'Perfect Score',
+    description: 'Get 100% in any module quiz',
+    icon: <Target size={24} />,
+    progress: 100,
+    earned: true,
+    earnedDate: '2024-03-15',
+    type: 'achievement'
+  },
+  {
+    id: 4,
+    title: 'Learning Streak',
+    description: 'Study for 7 consecutive days',
+    icon: <Flame size={24} />,
+    progress: 85,
+    earned: false,
+    type: 'progress'
+  }
+];
 
 const mockLearningModules = [
   {
@@ -153,6 +194,48 @@ const Dashboard: React.FC = () => {
           value="24"
           onClick={() => setSelectedModal('hours')}
         />
+      </div>
+
+      {/* Badges Section */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-pink-100 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">My Badges</h2>
+          <button 
+            onClick={() => setSelectedModal('badges')}
+            className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
+          >
+            View All
+            <ChevronRight size={16} />
+          </button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {mockBadges.slice(0, 4).map(badge => (
+            <motion.div
+              key={badge.id}
+              className={`p-4 rounded-xl text-center ${
+                badge.earned 
+                  ? 'bg-gradient-to-br from-pink-500 to-pink-600 text-white' 
+                  : 'bg-pink-50 text-gray-800'
+              }`}
+              whileHover={{ y: -2, scale: 1.02 }}
+            >
+              <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
+                badge.earned ? 'bg-white/20' : 'bg-white'
+              }`}>
+                {badge.icon}
+              </div>
+              <h3 className="font-medium text-sm mb-1">{badge.title}</h3>
+              {!badge.earned && badge.progress > 0 && (
+                <div className="w-full bg-white rounded-full h-1 mt-2">
+                  <div 
+                    className="bg-pink-500 h-1 rounded-full transition-all duration-300"
+                    style={{ width: `${badge.progress}%` }}
+                  />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -336,6 +419,55 @@ const Dashboard: React.FC = () => {
                 <span className="font-medium text-gray-800">6 hours</span>
               </div>
             </div>
+          </div>
+        </div>
+      </DetailModal>
+
+      {/* Badges Modal */}
+      <DetailModal
+        isOpen={selectedModal === 'badges'}
+        onClose={() => setSelectedModal(null)}
+        title="All Badges"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {mockBadges.map(badge => (
+              <motion.div
+                key={badge.id}
+                className={`p-4 rounded-xl ${
+                  badge.earned 
+                    ? 'bg-gradient-to-br from-pink-500 to-pink-600 text-white' 
+                    : 'bg-pink-50 text-gray-800'
+                }`}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    badge.earned ? 'bg-white/20' : 'bg-white'
+                  }`}>
+                    {badge.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">{badge.title}</h3>
+                    <p className={`text-sm ${badge.earned ? 'text-white/80' : 'text-gray-600'}`}>
+                      {badge.description}
+                    </p>
+                    {badge.earned ? (
+                      <p className="text-sm mt-2 text-white/80">
+                        Earned on {new Date(badge.earnedDate!).toLocaleDateString()}
+                      </p>
+                    ) : (
+                      <div className="w-full bg-white rounded-full h-1.5 mt-3">
+                        <div 
+                          className="bg-pink-500 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${badge.progress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </DetailModal>
