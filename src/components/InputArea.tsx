@@ -11,7 +11,11 @@ const InputArea: React.FC = () => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 128)}px`; // Max 4 lines (32px * 4)
+      const maxHeight = Math.min(
+        Math.max(window.visualViewport?.height || window.innerHeight, 300) * 0.3,
+        128
+      );
+      textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
     }
   };
 
@@ -24,8 +28,10 @@ const InputArea: React.FC = () => {
     if (message.trim()) {
       sendMessage(message.trim());
       setMessage('');
-      // Blur input to hide keyboard on mobile
-      textareaRef.current?.blur();
+      if (textareaRef.current) {
+        textareaRef.current.style.height = '44px'; // Reset height
+        textareaRef.current.blur(); // Hide keyboard
+      }
     }
   };
 
@@ -48,7 +54,7 @@ const InputArea: React.FC = () => {
             placeholder="Type your message..."
             className="w-full border border-pink-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 
               focus:ring-pink-300 focus:border-pink-300 resize-none placeholder-gray-400 text-gray-700
-              min-h-[44px] max-h-32"
+              min-h-[44px]"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

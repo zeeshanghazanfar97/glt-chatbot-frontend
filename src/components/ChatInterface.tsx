@@ -13,6 +13,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
   const { messages } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -20,26 +21,39 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
 
   // Handle viewport height changes (e.g., when keyboard shows/hides)
   useEffect(() => {
-    const updateHeight = () => {
-      if (containerRef.current) {
-        containerRef.current.style.height = `${window.visualViewport?.height}px`;
+    const updateLayout = () => {
+      if (containerRef.current && messagesRef.current) {
+        const vh = window.visualViewport?.height || window.innerHeight;
+        const vw = window.visualViewport?.width || window.innerWidth;
+        const offsetTop = window.visualViewport?.offsetTop || 0;
+
+        // Update container height and scroll position
+        containerRef.current.style.height = `${vh}px`;
+        containerRef.current.style.width = `${vw}px`;
+        containerRef.current.style.transform = `translateY(-${offsetTop}px)`;
       }
     };
 
-    window.visualViewport?.addEventListener('resize', updateHeight);
-    updateHeight();
+    window.visualViewport?.addEventListener('resize', updateLayout);
+    window.visualViewport?.addEventListener('scroll', updateLayout);
+    updateLayout();
 
-    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateLayout);
+      window.visualViewport?.removeEventListener('scroll', updateLayout);
+    };
   }, []);
 
   return (
     <div 
       ref={containerRef}
-      className="flex flex-col w-full bg-white overflow-hidden"
-      style={{ height: '100dvh' }}
+      className="flex flex-col w-full bg-white overflow-hidden fixed inset-0"
     >
       <Header onMenuClick={onMenuClick} />
-      <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent">
+      <div 
+        ref={messagesRef}
+        className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent"
+      >
         <MessageList />
         <div ref={bottomRef} />
       </div>
