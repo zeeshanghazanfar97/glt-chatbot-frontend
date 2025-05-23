@@ -6,25 +6,25 @@ const buttons = [
   { 
     id: 'wellness', 
     label: 'Wellness', 
-    icon: <Heart size={16} />, 
+    icon: <Heart size={14} />, 
     prompt: 'Tell me about personal hygiene and wellness tips'
   },
   { 
     id: 'tech', 
-    label: 'Tech Skills', 
-    icon: <Sparkles size={16} />, 
+    label: 'Tech', 
+    icon: <Sparkles size={14} />, 
     prompt: 'How can I learn more about computers and technology?'
   },
   { 
     id: 'careers', 
     label: 'Careers', 
-    icon: <Briefcase size={16} />, 
+    icon: <Briefcase size={14} />, 
     prompt: 'What careers can I explore in tech?'
   },
   { 
     id: 'kits', 
-    label: 'Hygiene Kits', 
-    icon: <BookOpen size={16} />, 
+    label: 'Kits', 
+    icon: <BookOpen size={14} />, 
     prompt: 'How can I get a free hygiene kit?'
   }
 ];
@@ -32,20 +32,16 @@ const buttons = [
 const QuickButtons: React.FC = () => {
   const { sendMessage } = useChat();
 
-  const handleButtonClick = (prompt: string) => {
-    sendMessage(prompt);
-  };
-
   return (
-    <div className="px-4 py-2 overflow-x-auto">
-      <div className="flex gap-2 pb-1">
+    <div className="px-3 py-2 overflow-x-auto bg-gray-50/50 md:bg-transparent">
+      <div className="flex gap-2">
         {buttons.map((button) => (
           <button
             key={button.id}
-            onClick={() => handleButtonClick(button.prompt)}
-            className="flex items-center gap-1 whitespace-nowrap px-3 py-1.5 bg-pink-50 
-              text-pink-600 rounded-full text-xs font-medium hover:bg-pink-100 
-              transition-colors duration-200"
+            onClick={() => sendMessage(button.prompt)}
+            className="flex items-center gap-1 whitespace-nowrap px-3 py-1.5 bg-white 
+              text-pink-500 rounded-full text-xs font-medium border border-pink-100
+              active:bg-pink-50 transition-colors duration-200 md:hover:bg-pink-50"
           >
             {button.icon}
             <span>{button.label}</span>
