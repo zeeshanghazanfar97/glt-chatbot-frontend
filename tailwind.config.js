@@ -9,12 +9,12 @@ export default {
           100: '#FFE0EB',
           200: '#FFC2D7',
           300: '#FFA3C2',
-          400: '#FF85AD',
-          500: '#FF6699',  // Primary hot pink
-          600: '#F0487A',
-          700: '#D83A6F',
-          800: '#B02C59',
-          900: '#8C1D44',
+          400: '#FC7DAF',  // Updated to match requested color
+          500: '#FC7DAF',  // Primary pink color updated
+          600: '#E56A9C',
+          700: '#CC5789',
+          800: '#B24476',
+          900: '#993163',
         },
       },
       animation: {
@@ -57,28 +57,16 @@ export default {
           '100%': { transform: 'translateX(-100%)', opacity: 0 },
         },
       },
-      spacing: {
-        '0.5': '4px',
-        '1': '8px',
-        '1.5': '12px',
-        '2': '16px',
-        '2.5': '20px',
-        '3': '24px',
-        '4': '32px',
-        '5': '40px',
-        '6': '48px',
-        '8': '64px',
-      },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: 'none',
             color: 'inherit',
             a: {
-              color: '#FF6699',
+              color: '#FC7DAF',
               textDecoration: 'underline',
               '&:hover': {
-                color: '#F0487A',
+                color: '#E56A9C',
               },
             },
             p: {
@@ -90,7 +78,7 @@ export default {
               marginBottom: '0.5em',
             },
             code: {
-              color: '#FF6699',
+              color: '#FC7DAF',
               backgroundColor: '#FFF0F6',
               padding: '0.2em 0.4em',
               borderRadius: '0.25em',

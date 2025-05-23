@@ -37,7 +37,7 @@ const QuickButtons: React.FC = () => {
   };
 
   return (
-    <div className="px-4 py-2 overflow-x-auto">
+    <div className="px-4 py-2 overflow-x-auto md:block hidden">
       <div className="flex gap-2 pb-1">
         {buttons.map((button) => (
           <button
