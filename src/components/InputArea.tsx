@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Mic, Paperclip } from 'lucide-react';
 import { useChat } from '../context/ChatContext';
 
 const InputArea: React.FC = () => {
   const [message, setMessage] = useState('');
   const { sendMessage, isTyping } = useChat();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 128)}px`; // Max 4 lines (32px * 4)
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [message]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
       sendMessage(message.trim());
       setMessage('');
+      // Blur input to hide keyboard on mobile
+      textareaRef.current?.blur();
     }
   };
 
@@ -27,13 +42,13 @@ const InputArea: React.FC = () => {
         
         <div className="flex-grow relative">
           <textarea
+            ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message..."
             className="w-full border border-pink-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 
               focus:ring-pink-300 focus:border-pink-300 resize-none placeholder-gray-400 text-gray-700
-              max-h-32"
-            rows={1}
+              min-h-[44px] max-h-32"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

@@ -12,13 +12,32 @@ interface ChatInterfaceProps {
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
   const { messages } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Handle viewport height changes (e.g., when keyboard shows/hides)
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        containerRef.current.style.height = `${window.visualViewport?.height}px`;
+      }
+    };
+
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    updateHeight();
+
+    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
+  }, []);
+
   return (
-    <div className="flex flex-col h-[100dvh] w-full bg-white">
+    <div 
+      ref={containerRef}
+      className="flex flex-col w-full bg-white overflow-hidden"
+      style={{ height: '100dvh' }}
+    >
       <Header onMenuClick={onMenuClick} />
       <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent">
         <MessageList />
