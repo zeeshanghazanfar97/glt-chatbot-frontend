@@ -18,13 +18,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen w-full bg-white">
+    <div className="flex flex-col h-[100dvh] w-full bg-white">
       <Header onMenuClick={onMenuClick} />
       <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent">
         <MessageList />
         <div ref={bottomRef} />
       </div>
-      <div className="border-t border-pink-100">
+      <div className="border-t border-pink-100 mt-auto">
         <QuickButtons />
         <InputArea />
       </div>

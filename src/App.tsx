@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import ChatInterface from './components/ChatInterface';
@@ -16,6 +16,13 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Close sidebar when route changes on mobile
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
@@ -25,7 +32,7 @@ const AnimatedRoutes = () => {
           path="/" 
           element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex">
+              <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
                 <Sidebar 
                   isOpen={isSidebarOpen} 
                   onClose={() => setIsSidebarOpen(false)}
@@ -42,7 +49,7 @@ const AnimatedRoutes = () => {
           path="/dashboard" 
           element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex">
+              <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
                 <Sidebar 
                   isOpen={isSidebarOpen} 
                   onClose={() => setIsSidebarOpen(false)}
@@ -59,7 +66,7 @@ const AnimatedRoutes = () => {
           path="/admin" 
           element={
             <ProtectedRoute>
-              <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex">
+              <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
                 <Sidebar 
                   isOpen={isSidebarOpen} 
                   onClose={() => setIsSidebarOpen(false)}
@@ -79,6 +86,15 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
+  // Register service worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(console.error);
+      });
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <AuthProvider>

@@ -15,11 +15,11 @@ const InputArea: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-white border-t border-pink-100">
+    <div className="sticky bottom-0 p-4 bg-white border-t border-pink-100">
       <form onSubmit={handleSubmit} className="flex items-end gap-3 max-w-4xl mx-auto">
         <button 
           type="button" 
-          className="p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
+          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
           aria-label="Attach file"
         >
           <Paperclip size={20} />
@@ -31,7 +31,8 @@ const InputArea: React.FC = () => {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message..."
             className="w-full border border-pink-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 
-              focus:ring-pink-300 focus:border-pink-300 resize-none placeholder-gray-400 text-gray-700"
+              focus:ring-pink-300 focus:border-pink-300 resize-none placeholder-gray-400 text-gray-700
+              max-h-32"
             rows={1}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -50,7 +51,7 @@ const InputArea: React.FC = () => {
         
         <button 
           type="button" 
-          className="p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
+          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
           aria-label="Voice message"
         >
           <Mic size={20} />
