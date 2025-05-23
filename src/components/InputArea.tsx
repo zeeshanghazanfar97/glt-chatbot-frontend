@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Mic, Paperclip } from 'lucide-react';
 import { useChat } from '../context/ChatContext';
 
 const InputArea: React.FC = () => {
@@ -11,7 +11,10 @@ const InputArea: React.FC = () => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      const maxHeight = Math.min(window.innerHeight * 0.2, 100);
+      const maxHeight = Math.min(
+        Math.max(window.visualViewport?.height || window.innerHeight, 300) * 0.3,
+        128
+      );
       textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
     }
   };
@@ -26,14 +29,23 @@ const InputArea: React.FC = () => {
       sendMessage(message.trim());
       setMessage('');
       if (textareaRef.current) {
-        textareaRef.current.style.height = '44px';
+        textareaRef.current.style.height = '44px'; // Reset height
+        textareaRef.current.blur(); // Hide keyboard
       }
     }
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="sticky bottom-0 p-4 bg-white border-t border-pink-100">
       <form onSubmit={handleSubmit} className="flex items-end gap-3 max-w-4xl mx-auto">
+        <button 
+          type="button" 
+          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
+          aria-label="Attach file"
+        >
+          <Paperclip size={20} />
+        </button>
+        
         <div className="flex-grow relative">
           <textarea
             ref={textareaRef}
@@ -57,6 +69,14 @@ const InputArea: React.FC = () => {
             </div>
           )}
         </div>
+        
+        <button 
+          type="button" 
+          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
+          aria-label="Voice message"
+        >
+          <Mic size={20} />
+        </button>
         
         <button 
           type="submit" 
