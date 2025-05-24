@@ -21,22 +21,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
   // Handle viewport height changes (e.g., when keyboard shows/hides)
   useEffect(() => {
     const updateHeight = () => {
-      if (containerRef.current) {
-        containerRef.current.style.height = `${window.visualViewport?.height}px`;
-      }
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
-    window.visualViewport?.addEventListener('resize', updateHeight);
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
     updateHeight();
 
-    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      window.removeEventListener('orientationchange', updateHeight);
+    };
   }, []);
 
   return (
     <div 
       ref={containerRef}
       className="flex flex-col w-full bg-white overflow-hidden"
-      style={{ height: '100dvh' }}
+      style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
     >
       <Header onMenuClick={onMenuClick} />
       <div className="flex-grow overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-pink-200 scrollbar-track-transparent">
