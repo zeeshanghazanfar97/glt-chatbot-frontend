@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, Paperclip } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useChat } from '../context/ChatContext';
 
 const InputArea: React.FC = () => {
@@ -11,7 +11,7 @@ const InputArea: React.FC = () => {
     const textarea = textareaRef.current;
     if (textarea) {
       textarea.style.height = 'auto';
-      const maxHeight = window.visualViewport ? window.visualViewport.height / 4 : 128;
+      const maxHeight = Math.min(window.visualViewport?.height || window.innerHeight, window.innerHeight) / 4;
       textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
     }
   };
@@ -33,25 +33,17 @@ const InputArea: React.FC = () => {
   };
 
   return (
-    <div className="sticky bottom-0 p-4 bg-white border-t border-pink-100">
-      <form onSubmit={handleSubmit} className="flex items-end gap-3 max-w-4xl mx-auto">
-        <button 
-          type="button" 
-          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
-          aria-label="Attach file"
-        >
-          <Paperclip size={20} />
-        </button>
-        
+    <div className="sticky bottom-0 p-3 bg-white">
+      <form onSubmit={handleSubmit} className="flex items-end gap-2 max-w-4xl mx-auto">
         <div className="flex-grow relative">
           <textarea
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message..."
-            className="w-full border border-pink-100 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 
+            className="w-full border border-pink-100 rounded-2xl px-3.5 py-2.5 focus:outline-none focus:ring-2 
               focus:ring-pink-300 focus:border-pink-300 resize-none placeholder-gray-400 text-gray-700
-              min-h-[44px]"
+              min-h-[44px] text-base"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -68,18 +60,10 @@ const InputArea: React.FC = () => {
         </div>
         
         <button 
-          type="button" 
-          className="hidden md:block p-2.5 text-pink-400 hover:text-pink-500 hover:bg-pink-50 rounded-xl transition-colors"
-          aria-label="Voice message"
-        >
-          <Mic size={20} />
-        </button>
-        
-        <button 
           type="submit" 
-          className={`p-3 rounded-xl bg-gradient-to-br from-pink-500 to-pink-400 text-white 
-            transition-all duration-200 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed 
-            disabled:hover:shadow-none ${message.trim() ? 'opacity-100' : 'opacity-50'}`}
+          className={`p-3 rounded-xl bg-gradient-to-br from-pink-400 to-pink-500 text-white 
+            transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed 
+            disabled:active:scale-100 ${message.trim() ? 'opacity-100' : 'opacity-50'}`}
           disabled={!message.trim()}
           aria-label="Send message"
         >

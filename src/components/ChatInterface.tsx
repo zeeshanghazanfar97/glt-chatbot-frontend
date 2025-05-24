@@ -29,14 +29,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
       const viewport = window.visualViewport;
       const isKeyboardVisible = window.innerHeight - viewport.height > 150;
 
-      // Set container height to viewport height
+      // Update container height to match viewport
       containerRef.current.style.height = `${viewport.height}px`;
+      containerRef.current.style.transform = `translateY(${-Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop)}px)`;
 
-      // When keyboard appears, scroll to bottom with a slight delay to ensure proper positioning
+      // Adjust message container padding when keyboard is visible
+      messagesRef.current.style.paddingBottom = isKeyboardVisible ? '0px' : '16px';
+
+      // Scroll to bottom when keyboard appears
       if (isKeyboardVisible) {
-        requestAnimationFrame(() => {
+        setTimeout(() => {
           bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-        });
+        }, 100);
       }
     };
 

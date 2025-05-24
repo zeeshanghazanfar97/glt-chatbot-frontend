@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Girlz Love Tech</title>
     <style>
+      :root {
+        height: 100%;
+      }
       body {
         font-family: 'Quicksand', sans-serif;
         -webkit-tap-highlight-color: transparent;
@@ -23,6 +26,12 @@
       #root {
         height: 100%;
         overflow: hidden;
+      }
+      @supports (-webkit-touch-callout: none) {
+        body {
+          /* iOS-specific fix */
+          position: relative;
+        }
       }
     </style>
   </head>
