@@ -77,6 +77,27 @@ const authService = {
     }
   },
 
+  async requestPasswordReset(email: string) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/password_reset/`, { email });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  async confirmPasswordReset(token: string, password: string) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/password_reset/confirm/`, {
+        token,
+        password
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data || error.message;
+    }
+  },
+
   getTokens(): AuthTokens | null {
     const tokensStr = localStorage.getItem('tokens');
     return tokensStr ? JSON.parse(tokensStr) : null;
@@ -87,4 +108,4 @@ const authService = {
   }
 };
 
-export default authService
+export default authService;

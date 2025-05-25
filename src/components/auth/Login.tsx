@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -26,6 +26,8 @@ const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
   const { login, error } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const message = location.state?.message;
 
   const onSubmit = async (data: LoginFormData) => {
     try {
@@ -99,6 +101,16 @@ const Login: React.FC = () => {
               </motion.h1>
             </div>
 
+            {message && (
+              <motion.div 
+                className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <p className="text-sm text-green-600">{message}</p>
+              </motion.div>
+            )}
+
             <motion.form 
               onSubmit={handleSubmit(onSubmit)} 
               className="space-y-4"
@@ -140,6 +152,15 @@ const Login: React.FC = () => {
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
                 )}
+              </div>
+
+              <div className="flex items-center justify-end">
+                <Link 
+                  to="/request-reset"
+                  className="text-sm text-pink-500 hover:text-pink-600"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               {error && (
