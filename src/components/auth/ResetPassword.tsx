@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Heart } from 'lucide-react';
@@ -17,6 +17,15 @@ const ResetPassword: React.FC = () => {
   
   const { register, handleSubmit, formState: { errors }, watch, setError } = useForm<ResetPasswordFormData>();
   const password = watch('password', '');
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/request-reset', { 
+        replace: true,
+        state: { error: 'Invalid or expired reset token. Please request a new password reset.' }
+      });
+    }
+  }, [token, navigate]);
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     if (!token) {
@@ -42,7 +51,6 @@ const ResetPassword: React.FC = () => {
   };
 
   if (!token) {
-    navigate('/request-reset', { replace: true });
     return null;
   }
 

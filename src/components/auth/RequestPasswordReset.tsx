@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Heart, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import authService from '../../services/authService';
@@ -12,6 +12,8 @@ interface RequestPasswordResetFormData {
 const RequestPasswordReset: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, setError } = useForm<RequestPasswordResetFormData>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const error = location.state?.error;
 
   const onSubmit = async (data: RequestPasswordResetFormData) => {
     try {
@@ -57,6 +59,16 @@ const RequestPasswordReset: React.FC = () => {
             Enter your email address and we'll send you instructions to reset your password.
           </p>
         </div>
+
+        {error && (
+          <motion.div 
+            className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <p className="text-sm text-red-600">{error}</p>
+          </motion.div>
+        )}
 
         <motion.form 
           onSubmit={handleSubmit(onSubmit)}
