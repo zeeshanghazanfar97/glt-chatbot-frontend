@@ -6,6 +6,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import RequestPasswordReset from './components/auth/RequestPasswordReset';
 import ResetPassword from './components/auth/ResetPassword';
+import LandingPage from './components/landing/LandingPage';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/dashboard/Dashboard';
 import AdminDashboard from './components/admin/AdminDashboard';
@@ -28,12 +29,13 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/request-reset" element={<RequestPasswordReset />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route 
-          path="/" 
+          path="/app" 
           element={
             <ProtectedRoute>
               <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
@@ -83,7 +85,6 @@ const AnimatedRoutes = () => {
             </ProtectedRoute>
           } 
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );
