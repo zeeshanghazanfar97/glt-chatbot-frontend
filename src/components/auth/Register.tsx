@@ -58,13 +58,13 @@ const Register: React.FC = () => {
 
   return (
     <motion.div 
-      className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4"
+      className="min-h-screen bg-gradient-to-b from-pink-50 to-white flex items-center justify-center p-4 overflow-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="w-full max-w-4xl relative bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex flex-col lg:flex-row min-h-[600px]">
+      <div className="w-full max-w-4xl relative bg-white rounded-2xl shadow-xl overflow-hidden my-8">
+        <div className="flex flex-col lg:flex-row">
           {/* Overlay Section - Hidden on mobile, shown at top on tablet */}
           <motion.div 
             className="hidden md:flex lg:w-1/2 bg-gradient-to-br from-pink-400 to-pink-500 p-8 text-white items-center justify-center"
