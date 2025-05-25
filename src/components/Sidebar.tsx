@@ -1,7 +1,8 @@
 import React from 'react';
-import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings } from 'lucide-react';
+import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -56,6 +57,12 @@ const menuItems = [
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <>
@@ -130,6 +137,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
                 </motion.button>
               ))}
             </nav>
+          </div>
+
+          {/* Logout button */}
+          <div className="p-4 border-t border-gray-100">
+            <motion.button
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-pink-50 
+                rounded-lg transition-colors duration-200 group"
+            >
+              <span className="text-pink-500 group-hover:text-pink-600 transition-colors">
+                <LogOut size={20} />
+              </span>
+              <span className="text-sm font-medium group-hover:text-pink-600 transition-colors">
+                Logout
+              </span>
+            </motion.button>
           </div>
         </div>
       </motion.div>
