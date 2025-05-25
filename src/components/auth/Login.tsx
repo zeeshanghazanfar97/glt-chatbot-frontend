@@ -84,12 +84,12 @@ const Login: React.FC = () => {
           >
             <div className="text-center mb-8">
               <motion.div 
-                className="inline-flex items-center justify-center p-3 bg-pink-100 rounded-full mb-4"
+                className="inline-flex items-center justify-center mb-4"
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <Heart className="text-pink-500" size={32} />
+                <img src="/logo.png" alt="GLT Logo" className="h-16 w-auto" />
               </motion.div>
               <motion.h1 
                 className="text-2xl font-bold text-gray-800"

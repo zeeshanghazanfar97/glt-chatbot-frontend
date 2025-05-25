@@ -84,12 +84,12 @@ const Register: React.FC = () => {
           >
             <div className="text-center mb-8">
               <motion.div 
-                className="inline-flex items-center justify-center p-3 bg-pink-100 rounded-full mb-4"
+                className="inline-flex items-center justify-center mb-4"
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <Heart className="text-pink-500" size={32} />
+                <img src="/logo.png" alt="GLT Logo" className="h-16 w-auto" />
               </motion.div>
               <motion.h1 
                 className="text-2xl font-bold text-gray-800"
@@ -188,7 +188,7 @@ const Register: React.FC = () => {
                   type="password"
                   {...register('password', { 
                     required: 'Password is required',
-                    minLength: { value: 6, message: 'Password must be at least 6 characters' }
+                    minLength: { value: 8, message: 'Password must be at least 8 characters' }
                   })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
                   placeholder="Create a password"
