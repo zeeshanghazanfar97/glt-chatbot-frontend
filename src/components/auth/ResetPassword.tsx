@@ -43,10 +43,18 @@ const ResetPassword: React.FC = () => {
         state: { message: 'Password has been reset successfully. Please login with your new password.' }
       });
     } catch (err: any) {
-      setError('password', {
-        type: 'manual',
-        message: err.detail || 'Failed to reset password. Please try again.'
-      });
+      // Handle API validation errors
+      if (err.password) {
+        setError('password', {
+          type: 'manual',
+          message: Array.isArray(err.password) ? err.password[0] : err.password
+        });
+      } else {
+        setError('password', {
+          type: 'manual',
+          message: err.detail || 'Failed to reset password. Please try again.'
+        });
+      }
     }
   };
 
@@ -99,13 +107,19 @@ const ResetPassword: React.FC = () => {
               type="password"
               {...register('password', { 
                 required: 'Password is required',
-                minLength: { value: 6, message: 'Password must be at least 6 characters' }
+                minLength: { value: 8, message: 'Password must be at least 8 characters' }
               })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
               placeholder="Enter new password"
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              <motion.p 
+                className="mt-1 text-sm text-red-600"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {errors.password.message}
+              </motion.p>
             )}
           </div>
 
@@ -123,7 +137,13 @@ const ResetPassword: React.FC = () => {
               placeholder="Confirm new password"
             />
             {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+              <motion.p 
+                className="mt-1 text-sm text-red-600"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {errors.confirmPassword.message}
+              </motion.p>
             )}
           </div>
 
