@@ -2,12 +2,17 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://glt-chat-backend.izeeshan.dev';
 
+export type UserType = 'student' | 'teacher' | 'parent' | 'community_member';
+
 export interface RegisterData {
   email: string;
   name: string;
-  grade: number;
-  school: string;
   password: string;
+  user_type: UserType;
+  student_grade?: number;
+  student_school?: string;
+  student_name?: string;
+  organization_name?: string;
 }
 
 export interface LoginData {
@@ -23,7 +28,12 @@ export interface AuthTokens {
 const authService = {
   async register(data: RegisterData) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/register/`, data);
+      // Remove undefined fields to keep payload clean
+      const payload = Object.fromEntries(
+        Object.entries(data).filter(([_, value]) => value !== undefined)
+      );
+      
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register/`, payload);
       return response.data;
     } catch (error: any) {
       throw error.response?.data || error.message;

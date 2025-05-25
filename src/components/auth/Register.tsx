@@ -1,9 +1,8 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { RegisterData } from '../../services/authService';
+import { RegisterData, UserType } from '../../services/authService';
 import { motion } from 'framer-motion';
 
 const overlayVariants = {
@@ -22,17 +21,36 @@ interface RegisterFormData extends RegisterData {
   confirmPassword: string;
 }
 
+const userTypes: { value: UserType; label: string }[] = [
+  { value: 'student', label: 'Student' },
+  { value: 'parent', label: 'Parent' },
+  { value: 'teacher', label: 'Teacher' },
+  { value: 'community_member', label: 'Community Member' }
+];
+
+const gradeOptions = Array.from({ length: 8 }, (_, i) => i + 5);
+
 const Register: React.FC = () => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<RegisterFormData>();
   const { register: registerUser, error } = useAuth();
   const navigate = useNavigate();
+  
+  const { register, handleSubmit, formState: { errors }, watch, control } = useForm<RegisterFormData>({
+    defaultValues: {
+      user_type: 'student'
+    }
+  });
+  
   const password = watch('password', '');
+  const userType = watch('user_type');
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const { confirmPassword, ...registerData } = data;
       await registerUser(registerData);
-      navigate('/login', { replace: true });
+      navigate('/login', { 
+        replace: true,
+        state: { message: 'Registration successful! Please login to continue.' }
+      });
     } catch (err) {
       // Error is handled by AuthContext
     }
@@ -144,41 +162,108 @@ const Register: React.FC = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Grade
-                  </label>
-                  <input
-                    type="number"
-                    {...register('grade', { 
-                      required: 'Grade is required',
-                      min: { value: 5, message: 'Grade must be between 5 and 12' },
-                      max: { value: 12, message: 'Grade must be between 5 and 12' }
-                    })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
-                    placeholder="5-12"
-                  />
-                  {errors.grade && (
-                    <p className="mt-1 text-sm text-red-600">{errors.grade.message}</p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  I am a
+                </label>
+                <Controller
+                  name="user_type"
+                  control={control}
+                  rules={{ required: 'Please select your role' }}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                    >
+                      {userTypes.map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
                   )}
-                </div>
+                />
+                {errors.user_type && (
+                  <p className="mt-1 text-sm text-red-600">{errors.user_type.message}</p>
+                )}
+              </div>
 
+              {(userType === 'student' || userType === 'parent') && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Grade
+                    </label>
+                    <Controller
+                      name="student_grade"
+                      control={control}
+                      rules={{ required: 'Grade is required' }}
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                        >
+                          <option value="">Select Grade</option>
+                          {gradeOptions.map(grade => (
+                            <option key={grade} value={grade}>
+                              Grade {grade}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    />
+                    {errors.student_grade && (
+                      <p className="mt-1 text-sm text-red-600">{errors.student_grade.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      School
+                    </label>
+                    <input
+                      type="text"
+                      {...register('student_school', { required: 'School is required' })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                      placeholder="School name"
+                    />
+                    {errors.student_school && (
+                      <p className="mt-1 text-sm text-red-600">{errors.student_school.message}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {userType === 'parent' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    School
+                    Student's Name
                   </label>
                   <input
                     type="text"
-                    {...register('school', { required: 'School is required' })}
+                    {...register('student_name', { required: "Student's name is required" })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
-                    placeholder="School name"
+                    placeholder="Enter student's name"
                   />
-                  {errors.school && (
-                    <p className="mt-1 text-sm text-red-600">{errors.school.message}</p>
+                  {errors.student_name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.student_name.message}</p>
                   )}
                 </div>
-              </div>
+              )}
+
+              {(userType === 'teacher' || userType === 'community_member') && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Organization Name
+                  </label>
+                  <input
+                    type="text"
+                    {...register('organization_name')}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                    placeholder="Enter organization name (optional)"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
