@@ -110,7 +110,7 @@ const DeveloperBadge = () => {
       {/* Tooltip for collapsed state */}
       {!isExpanded && isHovered && (
         <div className="absolute left-16 bottom-4 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fadeIn">
-          Developed by ZeeIT Tech Solutions
+          Developed by ZeeIT Solutions
           <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 border-4 border-transparent border-r-gray-900"></div>
         </div>
       )}
