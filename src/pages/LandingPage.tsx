@@ -209,7 +209,7 @@ const LandingPage: React.FC = () => {
       {/* Footer with developer reference */}
       <footer className="w-full py-4 bg-white/80 backdrop-blur-md text-center text-sm text-gray-500 select-none mt-auto">
         <p>
-          Developed by <a href="mailto:me@izeeshan.dev" className="text-pink-500 hover:underline">ZeeIT Tech Solutions</a>
+          Developed by <a href="https://zeeit.dev" className="text-pink-500 hover:underline">ZeeIT Tech Solutions</a>
         </p>
       </footer>
 
