@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://glt-chat-backend.izeeshan.dev';
 
-export type UserType = 'student' | 'teacher' | 'parent' | 'community_member';
+export type UserType = 'student' | 'teacher' | 'parent' | 'community_member' | 'sponsor';
 
 export interface RegisterData {
   email: string;

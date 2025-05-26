@@ -25,7 +25,8 @@ const userTypes: { value: UserType; label: string }[] = [
   { value: 'student', label: 'Student' },
   { value: 'parent', label: 'Parent' },
   { value: 'teacher', label: 'Teacher' },
-  { value: 'community_member', label: 'Community Member' }
+  { value: 'community_member', label: 'Community Member' },
+  { value: 'sponsor', label: 'Sponsor' }
 ];
 
 const gradeOptions = Array.from({ length: 8 }, (_, i) => i + 5);
@@ -251,7 +252,7 @@ const Register: React.FC = () => {
                 </div>
               )}
 
-              {(userType === 'teacher' || userType === 'community_member') && (
+              {(userType === 'teacher' || userType === 'community_member' || userType === 'sponsor') && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Organization Name
