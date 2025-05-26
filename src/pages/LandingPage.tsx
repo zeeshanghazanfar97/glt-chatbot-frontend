@@ -26,13 +26,73 @@ const wellnessFeatures = [
   }
 ];
 
+const DeveloperBadge = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className={`fixed left-0 bottom-6 z-50 flex items-center bg-pink-500 rounded-r-lg shadow-lg cursor-pointer select-none
+        transition-all duration-300 overflow-hidden
+        ${open ? 'w-56 px-4 py-2' : 'w-12 h-12 px-0 py-0'}`}
+      onClick={() => setOpen(o => !o)}
+      aria-label="Toggle Developer Badge"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setOpen(o => !o);
+        }
+      }}
+      title="Developed by ZeeIT Tech Solutions"
+    >
+      {/* Icon */}
+      <div
+        className={`flex items-center justify-center text-white font-bold text-lg flex-shrink-0 select-none ${
+          open ? 'mr-3' : 'mx-auto'
+        }`}
+        style={{ width: 36, height: 36 }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="feather feather-code"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+        >
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      </div>
+      {/* Text */}
+      {open && (
+        <span className="text-white text-sm font-semibold whitespace-nowrap">
+          Developed by{' '}
+          <a
+            href="https://zeeit.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-pink-300"
+          >
+            ZeeIT Tech Solutions
+          </a>
+        </span>
+      )}
+    </div>
+  );
+};
+
 const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
   // Chatbot widget state
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
-  const [messages, setMessages] = useState<{from: 'user'|'bot', text: string}[]>([
+  const [messages, setMessages] = useState<{ from: 'user' | 'bot'; text: string }[]>([
     { from: 'bot', text: "Hi! I'm your wellness chatbot. Ask me anything about hygiene, wellness, or products!" }
   ]);
   const [input, setInput] = useState('');
@@ -98,7 +158,6 @@ const LandingPage: React.FC = () => {
           {isAuthenticated ? "Open App" : "Login"}
         </button>
       </nav>
-
       {/* Hero Section */}
       <section className="flex flex-col-reverse md:flex-row items-center justify-between gap-8 px-6 md:px-16 pt-32 pb-12 md:pb-24">
         <div className="flex-1">
@@ -107,7 +166,7 @@ const LandingPage: React.FC = () => {
             <span className="text-pink-500">for a Healthier, Brighter Future</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-xl">
-            Girlz Love Tech is your trusted companion for wellness, hygiene, and personal growth. 
+            Girlz Love Tech is your trusted companion for wellness, hygiene, and personal growth.
             Get guidance, order essential products, and chat with our friendly AI for instant support—anytime, anywhere.
           </p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -137,7 +196,6 @@ const LandingPage: React.FC = () => {
           />
         </div>
       </section>
-
       {/* Public Chatbot Widget */}
       <div className="fixed bottom-6 right-6 z-50">
         {/* Widget button */}
@@ -206,12 +264,8 @@ const LandingPage: React.FC = () => {
         )}
       </div>
 
-      {/* Footer with developer reference */}
-      <footer className="w-full py-4 bg-white/80 backdrop-blur-md text-center text-sm text-gray-500 select-none mt-auto">
-        <p>
-          Developed by <a href="https://zeeit.dev" className="text-pink-500 hover:underline">ZeeIT Tech Solutions</a>
-        </p>
-      </footer>
+      {/* Developer badge */}
+      <DeveloperBadge />
 
       <style>
         {`
