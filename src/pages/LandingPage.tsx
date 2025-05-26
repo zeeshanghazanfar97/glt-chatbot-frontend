@@ -204,6 +204,12 @@ const LandingPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload),
       });
+      if (res.status === 429) {
+        const data = await res.json();
+        setMessages(msgs => [...msgs, { from: 'bot', text: data.error || "You are sending messages too quickly. Please wait and try again." }]);
+        setLoading(false);
+        return;
+      }
       if (!res.ok) throw new Error('Network error');
       const data = await res.json();
       setMessages(msgs => [...msgs, { from: 'bot', text: data.response || "Sorry, I didn't get that." }]);
