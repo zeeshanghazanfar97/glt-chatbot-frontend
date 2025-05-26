@@ -26,9 +26,6 @@ const wellnessFeatures = [
   }
 ];
 
-const DEV_REF_EMAIL = "me@izeeshan.dev";
-const DEV_REF_NAME = "ZeeIT Tech Solutions";
-
 const LandingPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -42,9 +39,6 @@ const LandingPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  // Developer Reference Badge state
-  const [showDevRef, setShowDevRef] = useState(true);
 
   useEffect(() => {
     if (isWidgetOpen) {
@@ -144,63 +138,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Developer Reference Badge */}
-      {showDevRef && (
-        <div
-          className="fixed left-0 top-1/2 z-50 -translate-y-1/2 flex flex-col items-center"
-          style={{ minWidth: 0 }}
-        >
-          <div className="relative group">
-            <div
-              className="bg-gradient-to-br from-pink-500 to-pink-400 shadow-xl border-2 border-pink-200 rounded-r-3xl px-2 py-2 flex items-center"
-              style={{
-                minHeight: 120,
-                minWidth: 44,
-                borderTopLeftRadius: 24,
-                borderBottomLeftRadius: 24,
-                borderTopRightRadius: 36,
-                borderBottomRightRadius: 36,
-                boxShadow: '0 4px 24px 0 rgba(233,30,99,0.15)'
-              }}
-            >
-              <span
-                className="text-white font-bold tracking-wide text-sm select-none"
-                style={{
-                  writingMode: 'vertical-rl',
-                  transform: 'rotate(-180deg)',
-                  letterSpacing: '0.1em',
-                  textShadow: '0 2px 8px rgba(0,0,0,0.10)'
-                }}
-              >
-                Developer Reference
-              </span>
-            </div>
-            <button
-              className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white text-pink-500 border border-pink-200 rounded-full shadow-md w-7 h-7 flex items-center justify-center hover:bg-pink-50 transition-all"
-              aria-label="Close developer reference"
-              onClick={() => setShowDevRef(false)}
-              tabIndex={0}
-              style={{ outline: 'none' }}
-            >
-              <span className="text-lg font-bold" style={{ lineHeight: 1 }}>×</span>
-            </button>
-            {/* Tooltip on hover */}
-            <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <div className="bg-white border border-pink-200 rounded-lg shadow-lg px-4 py-2 text-xs text-gray-700 font-medium whitespace-nowrap">
-                {DEV_REF_NAME}<br />
-                <a
-                  href={`mailto:${DEV_REF_EMAIL}`}
-                  className="text-pink-500 hover:underline"
-                  tabIndex={-1}
-                >
-                  {DEV_REF_EMAIL}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Public Chatbot Widget */}
       <div className="fixed bottom-6 right-6 z-50">
         {/* Widget button */}
@@ -268,6 +205,14 @@ const LandingPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Footer with developer reference */}
+      <footer className="w-full py-4 bg-white/80 backdrop-blur-md text-center text-sm text-gray-500 select-none mt-auto">
+        <p>
+          Developed by <a href="mailto:me@izeeshan.dev" className="text-pink-500 hover:underline">ZeeIT Tech Solutions</a>
+        </p>
+      </footer>
+
       <style>
         {`
         .animate-fadeIn {
