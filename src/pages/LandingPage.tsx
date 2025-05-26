@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle, Send, Code, Sparkles, Heart, Shield, Users, Award } from 'lucide-react';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const wellnessFeatures = [
   {
@@ -29,17 +30,15 @@ const wellnessFeatures = [
     color: "from-orange-400 to-yellow-400"
   }
 ];
-
 const DeveloperBadge = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div className="fixed left-4 bottom-4 z-50">
       <div
         className={`
           relative overflow-hidden cursor-pointer
-          bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600
+          bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8]
           rounded-full shadow-xl transition-all duration-500 ease-out
           hover:shadow-2xl hover:scale-105
           ${isExpanded ? 'rounded-2xl px-6 py-4' : 'w-14 h-14'}
@@ -57,7 +56,7 @@ const DeveloperBadge = () => {
         }}
       >
         {/* Animated background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 animate-gradient-x"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] animate-gradient-x"></div>
         
         {/* Sparkle effect */}
         <div className={`absolute inset-0 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
@@ -65,7 +64,6 @@ const DeveloperBadge = () => {
           <div className="absolute top-4 right-3 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
           <div className="absolute bottom-3 left-2 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
         </div>
-
         <div className="relative z-10 flex items-center text-white">
           {/* Icon */}
           <div className={`flex items-center justify-center transition-all duration-300 ${
@@ -73,7 +71,6 @@ const DeveloperBadge = () => {
           }`}>
             <Code className={`transition-all duration-300 ${isExpanded ? 'w-5 h-5' : 'w-6 h-6'}`} />
           </div>
-
           {/* Expanded content */}
           <div className={`
             transition-all duration-500 overflow-hidden
@@ -98,7 +95,6 @@ const DeveloperBadge = () => {
             </div>
           </div>
         </div>
-
         {/* Subtle shine effect */}
         <div className={`
           absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0
@@ -117,7 +113,6 @@ const DeveloperBadge = () => {
     </div>
   );
 };
-
 const FeatureCard = ({ feature, index }) => {
   return (
     <div className={`
@@ -156,7 +151,6 @@ const FeatureCard = ({ feature, index }) => {
     </div>
   );
 };
-
 const LandingPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -166,8 +160,9 @@ const LandingPage = () => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const inputRef = useRef(null);
-  const bottomRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [visitorId, setVisitorId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isWidgetOpen) {
@@ -178,6 +173,15 @@ const LandingPage = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isWidgetOpen]);
 
+  // Load visitorId on mount:
+  useEffect(() => {
+    FingerprintJS.load().then(fp => {
+      fp.get().then(result => {
+        setVisitorId(result.visitorId);
+      });
+    });
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim()) return;
     const userMsg = input.trim();
@@ -186,10 +190,19 @@ const LandingPage = () => {
     setLoading(true);
     
     try {
+      const bodyPayload = {
+        message: userMsg,
+      };
+
+      // Add visitorId if available
+      if (visitorId) {
+        bodyPayload.visitorId = visitorId;
+      }
+
       const res = await fetch('https://glt-chat-backend.izeeshan.dev/api/public-chatbot/message/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg })
+        body: JSON.stringify(bodyPayload),
       });
       if (!res.ok) throw new Error('Network error');
       const data = await res.json();
@@ -199,11 +212,9 @@ const LandingPage = () => {
     }
     setLoading(false);
   };
-
-  const handleInputKey = (e) => {
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleSend();
   };
-
   const handleTopButtonClick = () => {
     if (isAuthenticated) {
       navigate('/app');
@@ -211,11 +222,9 @@ const LandingPage = () => {
       navigate('/login');
     }
   };
-
   const handleRegisterClick = () => {
     navigate('/register');
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-x-hidden">
       {/* Animated background elements */}
@@ -224,15 +233,14 @@ const LandingPage = () => {
         <div className="absolute top-1/2 -left-4 w-96 h-96 bg-purple-200 rounded-full opacity-15 animate-float-delayed"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-200 rounded-full opacity-10 animate-float"></div>
       </div>
-
       {/* Navigation */}
       <nav className="relative z-40 w-full flex justify-between items-center px-6 py-4 bg-white/70 backdrop-blur-xl shadow-sm fixed top-0 left-0 border-b border-white/20">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#FC7DAF] to-[#FFA4C8] rounded-xl flex items-center justify-center shadow-lg">
             <Heart className="w-6 h-6 text-white" />
           </div>
           <div>
-            <span className="text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
               Girlz Love Tech
             </span>
             <div className="text-xs text-gray-500 -mt-1">Wellness & Empowerment</div>
@@ -240,7 +248,7 @@ const LandingPage = () => {
         </div>
         
         <button
-          className="group relative overflow-hidden bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+          className="group relative overflow-hidden bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
           onClick={handleTopButtonClick}
         >
           <span className="relative z-10">
@@ -249,7 +257,6 @@ const LandingPage = () => {
           <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
         </button>
       </nav>
-
       {/* Hero Section */}
       <section className="relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between gap-12 px-6 md:px-16 pt-32 pb-16">
         <div className="flex-1 space-y-8">
@@ -259,7 +266,7 @@ const LandingPage = () => {
                 Empowering Young Girls
               </span>
               <br />
-              <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
                 for a Brighter Future
               </span>
             </h1>
@@ -270,10 +277,9 @@ const LandingPage = () => {
               for instant support—anytime, anywhere.
             </p>
           </div>
-
           <div className="flex flex-wrap gap-4">
             <button
-              className="group relative overflow-hidden bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group relative overflow-hidden bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               onClick={handleRegisterClick}
             >
               <span className="relative z-10 flex items-center gap-2">
@@ -291,10 +297,9 @@ const LandingPage = () => {
             </button>
           </div>
         </div>
-
         <div className="flex-1 flex justify-center">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-500 rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
             <img
               src="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&w=600&h=600&fit=crop"
               alt="Wellness for girls"
@@ -304,31 +309,28 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="relative z-10 px-6 md:px-16 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Everything You Need to 
-            <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"> Thrive</span>
+            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> Thrive</span>
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Comprehensive wellness solutions designed specifically for young women
           </p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {wellnessFeatures.map((feature, index) => (
             <FeatureCard key={index} feature={feature} index={index} />
           ))}
         </div>
       </section>
-
       {/* Chatbot Widget */}
       <div className="fixed bottom-6 right-6 z-50">
         {!isWidgetOpen && (
           <button
-            className="group relative bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-full shadow-xl p-4 transition-all duration-300 hover:shadow-2xl hover:scale-110"
+            className="group relative bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white rounded-full shadow-xl p-4 transition-all duration-300 hover:shadow-2xl hover:scale-110"
             onClick={() => setIsWidgetOpen(true)}
           >
             <MessageCircle className="w-7 h-7 group-hover:rotate-12 transition-transform" />
@@ -337,10 +339,9 @@ const LandingPage = () => {
             </div>
           </button>
         )}
-
         {isWidgetOpen && (
           <div className="w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 flex flex-col overflow-hidden animate-slideUp">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                   <MessageCircle className="w-4 h-4 text-white" />
@@ -357,7 +358,6 @@ const LandingPage = () => {
                 ✕
               </button>
             </div>
-
             <div className="flex-1 flex flex-col p-4 space-y-3 overflow-y-auto max-h-80 min-h-48">
               {messages.map((msg, i) => (
                 <div
@@ -366,7 +366,7 @@ const LandingPage = () => {
                 >
                   <div className={`px-4 py-2 rounded-2xl text-sm shadow-sm max-w-xs ${
                     msg.from === 'user'
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
+                      ? 'bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] text-white'
                       : 'bg-gray-100 text-gray-800'
                   }`}>
                     {msg.text}
@@ -386,7 +386,6 @@ const LandingPage = () => {
               )}
               <div ref={bottomRef} />
             </div>
-
             <div className="p-4 border-t border-gray-100">
               <div className="flex items-center gap-2">
                 <input
@@ -400,7 +399,7 @@ const LandingPage = () => {
                   disabled={loading}
                 />
                 <button
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-2xl p-3 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                  className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white rounded-2xl p-3 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   onClick={handleSend}
                   disabled={loading || !input.trim()}
                 >
@@ -411,9 +410,7 @@ const LandingPage = () => {
           </div>
         )}
       </div>
-
       <DeveloperBadge />
-
       <style jsx>{`
         @keyframes gradient-x {
           0%, 100% { background-position: 0% 50%; }
@@ -459,5 +456,4 @@ const LandingPage = () => {
     </div>
   );
 };
-
 export default LandingPage;

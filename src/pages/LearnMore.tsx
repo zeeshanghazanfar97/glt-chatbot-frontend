@@ -18,15 +18,9 @@ import {
   Mail,
   MapPin
 } from 'lucide-react';
-
 const LearnMore = () => {
-//   const navigate = (path) => {
-//     // This will be replaced with actual navigation in your app
-//     console.log(`Navigate to: ${path}`);
-//   };
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('mission');
-
   const features = [
     {
       icon: <Lightbulb className="w-8 h-8" />,
@@ -77,14 +71,12 @@ const navigate = useNavigate();
       gradient: "from-purple-400 to-indigo-500"
     }
   ];
-
   const stats = [
     { number: "10K+", label: "Young Women Supported", icon: <Users className="w-6 h-6" /> },
     { number: "95%", label: "Satisfaction Rate", icon: <Star className="w-6 h-6" /> },
     { number: "24/7", label: "AI Support Available", icon: <MessageCircle className="w-6 h-6" /> },
     { number: "100+", label: "Educational Resources", icon: <BookOpen className="w-6 h-6" /> }
   ];
-
   const testimonials = [
     {
       name: "Sarah M.",
@@ -105,7 +97,6 @@ const navigate = useNavigate();
       rating: 5
     }
   ];
-
   const tabContent = {
     mission: {
       title: "Our Mission",
@@ -120,7 +111,7 @@ const navigate = useNavigate();
             <div className="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-2xl">
               <Target className="w-8 h-8 text-pink-500 mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Our Vision</h3>
-              <p className="text-gray-600">
+              <p className="text-gray-">
                 A world where every young woman has the knowledge, tools, and confidence to thrive 
                 during her most formative years.
               </p>
@@ -204,16 +195,14 @@ const navigate = useNavigate();
       )
     }
   };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-x-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-4 -right-4 w-72 h-72 bg-pink-200 rounded-full opacity-20 animate-float"></div>
         <div className="absolute top-1/2 -left-4 w-96 h-96 bg-purple-200 rounded-full opacity-15 animate-float-delayed"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-200 rounded-full opacity-10 animate-float"></div>
       </div>
-
       {/* Navigation */}
       <nav className="relative z-40 w-full flex justify-between items-center px-6 py-4 bg-white/70 backdrop-blur-xl shadow-sm">
         <button
@@ -225,22 +214,21 @@ const navigate = useNavigate();
         </button>
         
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#FC7DAF] to-[#FFA4C8] rounded-xl flex items-center justify-center shadow-lg">
             <Heart className="w-5 h-5 text-white" />
           </div>
-          <span className="text-lg font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="text-lg font-bold bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
             Girlz Love Tech
           </span>
         </div>
         
         <button
           onClick={() => navigate('/register')}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl"
+          className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white font-semibold px-6 py-2 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl"
         >
           Get Started
         </button>
       </nav>
-
       {/* Hero Section */}
       <section className="relative z-10 text-center px-6 py-16">
         <div className="max-w-4xl mx-auto">
@@ -249,7 +237,7 @@ const navigate = useNavigate();
               Empowering Young Women
             </span>
             <br />
-            <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
               Through Technology
             </span>
           </h1>
@@ -259,7 +247,6 @@ const navigate = useNavigate();
           </p>
         </div>
       </section>
-
       {/* Stats Section */}
       <section className="relative z-10 px-6 py-12">
         <div className="max-w-6xl mx-auto">
@@ -269,7 +256,7 @@ const navigate = useNavigate();
                 key={index}
                 className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-full flex items-center justify-center mx-auto mb-4">
                   {stat.icon}
                 </div>
                 <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
@@ -279,20 +266,18 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="relative z-10 px-6 py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Comprehensive 
-              <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"> Wellness Solutions</span>
+              <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> Wellness Solutions</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Everything you need for a healthier, more confident you
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => (
               <div
@@ -319,17 +304,15 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
-
       {/* Testimonials */}
       <section className="relative z-10 px-6 py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What Young Women Say
-              <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent"> About Us</span>
+              <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> About Us</span>
             </h2>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <div
@@ -350,7 +333,6 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
-
       {/* Tabbed Content Section */}
       <section className="relative z-10 px-6 py-16">
         <div className="max-w-4xl mx-auto">
@@ -363,7 +345,7 @@ const navigate = useNavigate();
                   onClick={() => setActiveTab(key)}
                   className={`flex-1 px-6 py-4 text-sm font-semibold transition-all duration-300 ${
                     activeTab === key
-                      ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
+                      ? 'bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] text-white'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
@@ -382,11 +364,10 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="relative z-10 px-6 py-16">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-3xl px-8 py-12 text-white">
+          <div className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl px-8 py-12 text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ready to Start Your Wellness Journey?
             </h2>
@@ -410,7 +391,6 @@ const navigate = useNavigate();
           </div>
         </div>
       </section>
-
       <style jsx>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -428,5 +408,4 @@ const navigate = useNavigate();
     </div>
   );
 };
-
 export default LearnMore;
