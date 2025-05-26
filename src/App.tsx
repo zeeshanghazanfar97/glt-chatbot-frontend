@@ -14,6 +14,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
+import LearnMore from './pages/LearnMore';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -34,6 +35,7 @@ const AnimatedRoutes = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/request-reset" element={<RequestPasswordReset />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/learn-more" element={<LearnMore />} />
         <Route 
           path="/app" 
           element={

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { MessageCircle, Send, Code, Sparkles, Heart, Shield, Users, Award } from 'lucide-react';
 
 const wellnessFeatures = [
@@ -90,7 +92,7 @@ const DeveloperBadge = () => {
                   className="underline hover:text-pink-200 transition-colors font-medium"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  ZeeIT Tech Solutions
+                  ZeeIT Solutions
                 </a>
               </div>
             </div>
@@ -156,7 +158,8 @@ const FeatureCard = ({ feature, index }) => {
 };
 
 const LandingPage = () => {
-  const [isAuthenticated] = useState(false); // Mock auth state
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [messages, setMessages] = useState([
     { from: 'bot', text: "Hi! I'm your wellness chatbot. Ask me anything about hygiene, wellness, or products!" }
@@ -182,14 +185,19 @@ const LandingPage = () => {
     setInput('');
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setMessages(msgs => [...msgs, { 
-        from: 'bot', 
-        text: "Thanks for your message! I'm here to help with wellness and hygiene questions." 
-      }]);
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await fetch('https://glt-chat-backend.izeeshan.dev/api/public-chatbot/message/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      });
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+      setMessages(msgs => [...msgs, { from: 'bot', text: data.response || "Sorry, I didn't get that." }]);
+    } catch {
+      setMessages(msgs => [...msgs, { from: 'bot', text: "Sorry, something went wrong. Please try again." }]);
+    }
+    setLoading(false);
   };
 
   const handleInputKey = (e) => {
@@ -197,9 +205,16 @@ const LandingPage = () => {
   };
 
   const handleTopButtonClick = () => {
-    // Navigation logic would go here
-    console.log(isAuthenticated ? 'Navigate to app' : 'Navigate to login');
+    if (isAuthenticated) {
+      navigate('/app');
+    } else {
+      navigate('/login');
+    }
   };
+
+  const handleRegisterClick = () => {
+    navigate('/register');
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-x-hidden">
@@ -229,7 +244,7 @@ const LandingPage = () => {
           onClick={handleTopButtonClick}
         >
           <span className="relative z-10">
-            {isAuthenticated ? "Open App" : "Get Started"}
+            {isAuthenticated ? "Open App" : "Login"}
           </span>
           <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
         </button>
@@ -259,15 +274,18 @@ const LandingPage = () => {
           <div className="flex flex-wrap gap-4">
             <button
               className="group relative overflow-hidden bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              onClick={handleTopButtonClick}
+              onClick={handleRegisterClick}
             >
               <span className="relative z-10 flex items-center gap-2">
-                {isAuthenticated ? "Open App" : "Start Your Journey"}
+                Start your Journey
                 <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
               </span>
             </button>
             
-            <button className="group flex items-center gap-2 bg-white/80 hover:bg-white text-gray-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-gray-200">
+            <button
+              className="group flex items-center gap-2 bg-white/80 hover:bg-white text-gray-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-gray-200"
+              onClick={() => navigate('/learn-more')}
+            >
               <Users className="w-4 h-4" />
               Learn More
             </button>
