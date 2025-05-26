@@ -13,6 +13,7 @@ import { ChatProvider } from './context/ChatContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import LandingPage from './pages/LandingPage';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -28,12 +29,13 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/request-reset" element={<RequestPasswordReset />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route 
-          path="/" 
+          path="/app" 
           element={
             <ProtectedRoute>
               <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
