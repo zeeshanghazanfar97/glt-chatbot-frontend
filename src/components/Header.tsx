@@ -21,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <button
               onClick={() => navigate('/app')}
               className="p-2 hover:bg-white/20 rounded-full transition-colors"
+              aria-label="Go back to chat"
             >
               <ArrowLeft size={20} />
             </button>
@@ -28,6 +29,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <button
               onClick={onMenuClick}
               className="p-2 hover:bg-white/20 rounded-full transition-colors"
+              aria-label="Open menu"
             >
               <Menu size={20} />
             </button>
