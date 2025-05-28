@@ -20,9 +20,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div className="relative">
       <motion.div
-        className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer 
+        className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer 
           overflow-hidden border border-pink-100"
-        whileHover={{ y: -2 }}
+        whileHover={{ y: -1 }}
         onClick={() => setShowDetails(true)}
       >
         <div className="aspect-square overflow-hidden">
@@ -32,9 +32,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="p-4">
-          <h3 className="font-medium text-gray-900 mb-1 line-clamp-1">{product.title}</h3>
-          <p className="text-pink-500 font-semibold">${product.price}</p>
+        <div className="p-2">
+          <h3 className="text-xs font-medium text-gray-900 line-clamp-1">{product.title}</h3>
+          <p className="text-xs text-pink-500 font-semibold">${product.price}</p>
         </div>
       </motion.div>
 
@@ -52,8 +52,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md 
-                bg-white rounded-2xl shadow-2xl z-50 overflow-hidden"
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md 
+                bg-white rounded-2xl shadow-2xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto"
             >
               <div className="relative">
                 <div className="aspect-square">
@@ -75,12 +75,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </button>
               </div>
 
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.title}</h3>
-                <p className="text-gray-600 mb-4">{product.description}</p>
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-2xl font-bold text-pink-500">${product.price}</span>
-                  <span className={`text-sm font-medium px-2 py-1 rounded-full ${
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{product.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xl font-bold text-pink-500">${product.price}</span>
+                  <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                     product.in_stock 
                       ? 'bg-green-100 text-green-700' 
                       : 'bg-red-100 text-red-700'
@@ -89,30 +89,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleQuantityChange(quantity - 1);
                       }}
-                      className="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center 
+                      className="w-7 h-7 rounded-full bg-pink-100 text-pink-500 flex items-center 
                         justify-center hover:bg-pink-200 transition-colors"
                       disabled={quantity === 0}
                     >
-                      <Minus size={16} />
+                      <Minus size={14} />
                     </button>
-                    <span className="w-8 text-center font-medium">{quantity}</span>
+                    <span className="w-6 text-center text-sm font-medium">{quantity}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleQuantityChange(quantity + 1);
                       }}
-                      className="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center 
+                      className="w-7 h-7 rounded-full bg-pink-100 text-pink-500 flex items-center 
                         justify-center hover:bg-pink-200 transition-colors"
                       disabled={!product.in_stock}
                     >
-                      <Plus size={16} />
+                      <Plus size={14} />
                     </button>
                   </div>
                   <button
@@ -123,7 +123,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                       }
                     }}
                     className={`flex-grow flex items-center justify-center gap-2 py-2 px-4 rounded-xl 
-                      font-medium transition-all duration-200 ${
+                      text-sm font-medium transition-all duration-200 ${
                         quantity > 0
                           ? 'bg-green-500 text-white'
                           : 'bg-pink-500 text-white hover:bg-pink-600'
@@ -134,7 +134,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                       <>Added to Cart</>
                     ) : (
                       <>
-                        <ShoppingCart size={18} />
+                        <ShoppingCart size={16} />
                         Add to Cart
                       </>
                     )}
