@@ -50,7 +50,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initializeData = async () => {
       setLoading(true);
       try {
-        await Promise.all([loadUserData(), refreshDashboard()]);
+        // Only load user data for now, since dashboard endpoint is not available
+        await loadUserData();
       } finally {
         setLoading(false);
       }
