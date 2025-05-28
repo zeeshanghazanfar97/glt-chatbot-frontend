@@ -12,6 +12,7 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import { ChatProvider } from './context/ChatContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { UserProvider } from './context/UserContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
@@ -20,7 +21,6 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Close sidebar when route changes on mobile
   useEffect(() => {
     if (window.innerWidth < 1024) {
       setIsSidebarOpen(false);
@@ -94,18 +94,15 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
-  // Register service worker only in production and when supported
   useEffect(() => {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       try {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js').catch(error => {
-            // Silently handle service worker registration failure
             console.debug('Service worker registration skipped:', error.message);
           });
         });
       } catch (error) {
-        // Silently handle any service worker related errors
         console.debug('Service worker setup skipped:', error.message);
       }
     }
@@ -114,11 +111,13 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ThemeProvider>
-          <ChatProvider>
-            <AnimatedRoutes />
-          </ChatProvider>
-        </ThemeProvider>
+        <UserProvider>
+          <ThemeProvider>
+            <ChatProvider>
+              <AnimatedRoutes />
+            </ChatProvider>
+          </ThemeProvider>
+        </UserProvider>
       </AuthProvider>
     </BrowserRouter>
   );
