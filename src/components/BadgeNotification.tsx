@@ -15,7 +15,7 @@ const BadgeNotification: React.FC<BadgeNotificationProps> = ({ badge, onClose })
         initial={{ opacity: 0, y: 50, scale: 0.3 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.5, y: 50 }}
-        className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+        className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-50"
       >
         <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full border border-pink-100">
           <div className="relative">
