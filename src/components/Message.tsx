@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { MessageType } from '../types';
 import { Bot, User } from 'lucide-react';
+import ProductCard from './ProductCard';
 
 interface MessageProps {
   message: MessageType;
@@ -25,16 +26,26 @@ const Message: React.FC<MessageProps> = ({ message }) => {
         >
           {isBot ? <Bot size={14} /> : <User size={14} />}
         </div>
-        <div 
-          className={`rounded-2xl py-2.5 px-3.5 shadow-sm
-            ${isBot 
-              ? 'bg-white text-gray-800 rounded-tl-none prose prose-pink max-w-none' 
-              : 'bg-gradient-to-br from-pink-400 to-pink-500 text-white rounded-tr-none'}`}
-        >
-          {isBot ? (
-            <ReactMarkdown className="text-sm leading-relaxed">{message.text}</ReactMarkdown>
-          ) : (
-            <p className="text-sm">{message.text}</p>
+        <div>
+          <div 
+            className={`rounded-2xl py-2.5 px-3.5 shadow-sm
+              ${isBot 
+                ? 'bg-white text-gray-800 rounded-tl-none prose prose-pink max-w-none' 
+                : 'bg-gradient-to-br from-pink-400 to-pink-500 text-white rounded-tr-none'}`}
+          >
+            {isBot ? (
+              <ReactMarkdown className="text-sm leading-relaxed">{message.text}</ReactMarkdown>
+            ) : (
+              <p className="text-sm">{message.text}</p>
+            )}
+          </div>
+
+          {message.products && message.products.length > 0 && (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {message.products.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           )}
           
           {message.suggestions && (
