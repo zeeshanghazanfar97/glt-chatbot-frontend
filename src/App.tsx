@@ -94,12 +94,20 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
-  // Register service worker
+  // Register service worker only in production and when supported
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(console.error);
-      });
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+      try {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(error => {
+            // Silently handle service worker registration failure
+            console.debug('Service worker registration skipped:', error.message);
+          });
+        });
+      } catch (error) {
+        // Silently handle any service worker related errors
+        console.debug('Service worker setup skipped:', error.message);
+      }
     }
   }, []);
 
