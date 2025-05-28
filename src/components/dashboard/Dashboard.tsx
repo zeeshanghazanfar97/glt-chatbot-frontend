@@ -71,7 +71,6 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, title, child
   </AnimatePresence>
 );
 
-// Mock data for courses since it's not included in the API response
 const mockLearningModules = [
   {
     id: 1,
@@ -261,6 +260,11 @@ const Dashboard: React.FC = () => {
                   <span className="text-gray-500">
                     {new Date(order.created_at).toLocaleDateString()}
                   </span>
+                  {'amount' in order && (
+                    <span className="font-medium text-pink-500">
+                      ${order.amount.toFixed(2)}
+                    </span>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -368,6 +372,13 @@ const Dashboard: React.FC = () => {
                       <li key={index}>{item}</li>
                     ))}
                   </ul>
+                </div>
+              )}
+              {'amount' in order && (
+                <div className="mt-2 text-right">
+                  <span className="font-medium text-pink-500">
+                    Total: ${order.amount.toFixed(2)}
+                  </span>
                 </div>
               )}
             </div>
