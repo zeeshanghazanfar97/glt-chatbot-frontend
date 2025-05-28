@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Book, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useUser } from '../../context/UserContext';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -70,47 +71,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ isOpen, onClose, title, child
   </AnimatePresence>
 );
 
-const mockBadges = [
-  {
-    id: 1,
-    title: 'Quick Learner',
-    description: 'Complete 5 lessons in a single day',
-    icon: <Zap size={24} />,
-    progress: 100,
-    earned: true,
-    earnedDate: '2024-03-10',
-    type: 'achievement'
-  },
-  {
-    id: 2,
-    title: 'Tech Explorer',
-    description: 'Try all available learning modules',
-    icon: <Brain size={24} />,
-    progress: 60,
-    earned: false,
-    type: 'progress'
-  },
-  {
-    id: 3,
-    title: 'Perfect Score',
-    description: 'Get 100% in any module quiz',
-    icon: <Target size={24} />,
-    progress: 100,
-    earned: true,
-    earnedDate: '2024-03-15',
-    type: 'achievement'
-  },
-  {
-    id: 4,
-    title: 'Learning Streak',
-    description: 'Study for 7 consecutive days',
-    icon: <Flame size={24} />,
-    progress: 85,
-    earned: false,
-    type: 'progress'
-  }
-];
-
+// Mock data for courses since it's not included in the API response
 const mockLearningModules = [
   {
     id: 1,
@@ -138,31 +99,30 @@ const mockLearningModules = [
   }
 ];
 
-const mockOrders = [
-  {
-    id: 'ORD-001',
-    date: '2024-03-15',
-    items: ['Hygiene Kit Basic', 'Personal Care Pack'],
-    status: 'Delivered',
-    total: 25.99
-  },
-  {
-    id: 'ORD-002',
-    date: '2024-03-10',
-    items: ['Wellness Bundle'],
-    status: 'In Transit',
-    total: 35.50
-  }
-];
-
-const mockAchievements = [
-  { id: 1, title: 'First Course Completed', date: '2024-03-01', points: 100 },
-  { id: 2, title: 'Perfect Quiz Score', date: '2024-03-05', points: 50 },
-  { id: 3, title: 'Learning Streak - 7 Days', date: '2024-03-12', points: 75 },
-];
-
 const Dashboard: React.FC = () => {
   const [selectedModal, setSelectedModal] = useState<string | null>(null);
+  const { dashboardData, refreshDashboard } = useUser();
+
+  useEffect(() => {
+    refreshDashboard();
+  }, []);
+
+  if (!dashboardData) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { total_orders, orders, learning_hours, badges } = dashboardData;
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -173,25 +133,25 @@ const Dashboard: React.FC = () => {
         <StatCard
           icon={<Book size={20} />}
           label="Active Courses"
-          value="3"
+          value={mockLearningModules.length}
           onClick={() => setSelectedModal('courses')}
         />
         <StatCard
           icon={<Trophy size={20} />}
-          label="Achievements"
-          value="12"
-          onClick={() => setSelectedModal('achievements')}
+          label="Earned Badges"
+          value={badges.filter(b => b.is_earned).length}
+          onClick={() => setSelectedModal('badges')}
         />
         <StatCard
           icon={<Package size={20} />}
           label="Total Orders"
-          value="2"
+          value={total_orders}
           onClick={() => setSelectedModal('orders')}
         />
         <StatCard
           icon={<Clock size={20} />}
           label="Learning Hours"
-          value="24"
+          value={learning_hours.total_hours}
           onClick={() => setSelectedModal('hours')}
         />
       </div>
@@ -209,27 +169,27 @@ const Dashboard: React.FC = () => {
           </button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {mockBadges.slice(0, 4).map(badge => (
+          {badges.slice(0, 4).map(badge => (
             <motion.div
-              key={badge.id}
+              key={badge.badge_name}
               className={`p-4 rounded-xl text-center ${
-                badge.earned 
+                badge.is_earned 
                   ? 'bg-gradient-to-br from-pink-500 to-pink-600 text-white' 
                   : 'bg-pink-50 text-gray-800'
               }`}
               whileHover={{ y: -2, scale: 1.02 }}
             >
               <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
-                badge.earned ? 'bg-white/20' : 'bg-white'
+                badge.is_earned ? 'bg-white/20' : 'bg-white'
               }`}>
-                {badge.icon}
+                <img src={badge.badge_icon} alt={badge.badge_name} className="w-8 h-8" />
               </div>
-              <h3 className="font-medium text-sm mb-1">{badge.title}</h3>
-              {!badge.earned && badge.progress > 0 && (
+              <h3 className="font-medium text-sm mb-1">{badge.badge_name}</h3>
+              {!badge.is_earned && (
                 <div className="w-full bg-white rounded-full h-1 mt-2">
                   <div 
                     className="bg-pink-500 h-1 rounded-full transition-all duration-300"
-                    style={{ width: `${badge.progress}%` }}
+                    style={{ width: '0%' }}
                   />
                 </div>
               )}
@@ -273,30 +233,33 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-pink-100">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Order History</h2>
           <div className="space-y-4">
-            {mockOrders.map(order => (
+            {orders.map(order => (
               <motion.div 
-                key={order.id}
+                key={order.order_id}
                 className="p-4 rounded-lg bg-pink-50/50 hover:bg-pink-50 transition-colors"
                 whileHover={{ x: 4 }}
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-medium text-gray-800">{order.id}</h3>
+                    <h3 className="font-medium text-gray-800">{order.order_id}</h3>
                     <p className="text-sm text-gray-600">
-                      {order.items.join(', ')}
+                      {order.title}
                     </p>
                   </div>
-                  <span className={`text-sm px-2 py-1 rounded-full font-medium
-                    ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                  <span className="text-sm px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-700">
                     {order.status}
                   </span>
                 </div>
+                {order.items && (
+                  <ul className="mt-2 space-y-1">
+                    {order.items.map((item, index) => (
+                      <li key={index} className="text-sm text-gray-600">• {item}</li>
+                    ))}
+                  </ul>
+                )}
                 <div className="flex justify-between items-center mt-2 text-sm">
                   <span className="text-gray-500">
-                    {new Date(order.date).toLocaleDateString()}
-                  </span>
-                  <span className="font-medium text-pink-500">
-                    ${order.total.toFixed(2)}
+                    {new Date(order.created_at).toLocaleDateString()}
                   </span>
                 </div>
               </motion.div>
@@ -331,27 +294,50 @@ const Dashboard: React.FC = () => {
       </DetailModal>
 
       <DetailModal
-        isOpen={selectedModal === 'achievements'}
+        isOpen={selectedModal === 'badges'}
         onClose={() => setSelectedModal(null)}
-        title="Your Achievements"
+        title="All Badges"
       >
         <div className="space-y-4">
-          {mockAchievements.map(achievement => (
-            <div key={achievement.id} className="flex items-center gap-4 p-4 bg-pink-50 rounded-lg">
-              <div className="p-2 bg-white rounded-full text-pink-500">
-                <Trophy size={24} />
-              </div>
-              <div className="flex-grow">
-                <h3 className="font-medium text-gray-800">{achievement.title}</h3>
-                <p className="text-sm text-gray-600">
-                  Earned on {new Date(achievement.date).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="text-pink-500 font-medium">
-                {achievement.points} pts
-              </div>
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {badges.map(badge => (
+              <motion.div
+                key={badge.badge_name}
+                className={`p-4 rounded-xl ${
+                  badge.is_earned 
+                    ? 'bg-gradient-to-br from-pink-500 to-pink-600 text-white' 
+                    : 'bg-pink-50 text-gray-800'
+                }`}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    badge.is_earned ? 'bg-white/20' : 'bg-white'
+                  }`}>
+                    <img src={badge.badge_icon} alt={badge.badge_name} className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-1">{badge.badge_name}</h3>
+                    <p className={`text-sm ${badge.is_earned ? 'text-white/80' : 'text-gray-600'}`}>
+                      {badge.badge_description}
+                    </p>
+                    {badge.is_earned ? (
+                      <p className="text-sm mt-2 text-white/80">
+                        Earned on {new Date(badge.earned_at!).toLocaleDateString()}
+                      </p>
+                    ) : (
+                      <div className="w-full bg-white rounded-full h-1.5 mt-3">
+                        <div 
+                          className="bg-pink-500 h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: '0%' }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </DetailModal>
 
@@ -361,33 +347,29 @@ const Dashboard: React.FC = () => {
         title="Order History"
       >
         <div className="space-y-4">
-          {mockOrders.map(order => (
-            <div key={order.id} className="border-b border-gray-100 pb-4">
+          {orders.map(order => (
+            <div key={order.order_id} className="border-b border-gray-100 pb-4">
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h3 className="font-medium text-gray-800">{order.id}</h3>
+                  <h3 className="font-medium text-gray-800">{order.order_id}</h3>
                   <p className="text-sm text-gray-600">
-                    Ordered on {new Date(order.date).toLocaleDateString()}
+                    Ordered on {new Date(order.created_at).toLocaleDateString()}
                   </p>
                 </div>
-                <span className={`text-sm px-2 py-1 rounded-full font-medium
-                  ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                <span className="text-sm px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-700">
                   {order.status}
                 </span>
               </div>
-              <div className="mt-2">
-                <h4 className="text-sm font-medium text-gray-700">Items:</h4>
-                <ul className="list-disc list-inside text-sm text-gray-600 mt-1">
-                  {order.items.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-2 text-right">
-                <span className="font-medium text-pink-500">
-                  Total: ${order.total.toFixed(2)}
-                </span>
-              </div>
+              {order.items && (
+                <div className="mt-2">
+                  <h4 className="text-sm font-medium text-gray-700">Items:</h4>
+                  <ul className="list-disc list-inside text-sm text-gray-600 mt-1">
+                    {order.items.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -401,73 +383,18 @@ const Dashboard: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-pink-50 rounded-lg p-4">
             <h3 className="font-medium text-gray-800 mb-2">Total Learning Time</h3>
-            <p className="text-3xl font-bold text-pink-500">24 Hours</p>
+            <p className="text-3xl font-bold text-pink-500">{learning_hours.total_hours} Hours</p>
           </div>
           <div>
             <h3 className="font-medium text-gray-800 mb-2">Time Breakdown</h3>
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Introduction to Programming</span>
-                <span className="font-medium text-gray-800">10 hours</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Web Development Basics</span>
-                <span className="font-medium text-gray-800">8 hours</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Digital Safety</span>
-                <span className="font-medium text-gray-800">6 hours</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </DetailModal>
-
-      {/* Badges Modal */}
-      <DetailModal
-        isOpen={selectedModal === 'badges'}
-        onClose={() => setSelectedModal(null)}
-        title="All Badges"
-      >
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {mockBadges.map(badge => (
-              <motion.div
-                key={badge.id}
-                className={`p-4 rounded-xl ${
-                  badge.earned 
-                    ? 'bg-gradient-to-br from-pink-500 to-pink-600 text-white' 
-                    : 'bg-pink-50 text-gray-800'
-                }`}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    badge.earned ? 'bg-white/20' : 'bg-white'
-                  }`}>
-                    {badge.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-medium mb-1">{badge.title}</h3>
-                    <p className={`text-sm ${badge.earned ? 'text-white/80' : 'text-gray-600'}`}>
-                      {badge.description}
-                    </p>
-                    {badge.earned ? (
-                      <p className="text-sm mt-2 text-white/80">
-                        Earned on {new Date(badge.earnedDate!).toLocaleDateString()}
-                      </p>
-                    ) : (
-                      <div className="w-full bg-white rounded-full h-1.5 mt-3">
-                        <div 
-                          className="bg-pink-500 h-1.5 rounded-full transition-all duration-300"
-                          style={{ width: `${badge.progress}%` }}
-                        />
-                      </div>
-                    )}
-                  </div>
+              {Object.entries(learning_hours.details).map(([key, value]) => (
+                <div key={key} className="flex justify-between text-sm">
+                  <span className="text-gray-600">{key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                  <span className="font-medium text-gray-800">{value} hours</span>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </DetailModal>
