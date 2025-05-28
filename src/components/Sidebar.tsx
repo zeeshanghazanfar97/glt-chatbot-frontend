@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 const getMenuItems = (isAdmin: boolean) => {
-  const items = [
+  const baseItems = [
     {
       id: 'dashboard',
       icon: <LayoutDashboard size={20} />,
@@ -52,15 +52,19 @@ const getMenuItems = (isAdmin: boolean) => {
   ];
 
   if (isAdmin) {
-    items.splice(1, 0, {
-      id: 'admin',
-      icon: <Settings size={20} />,
-      label: 'Admin Panel',
-      path: '/admin',
-    });
+    return [
+      baseItems[0],
+      {
+        id: 'admin',
+        icon: <Settings size={20} />,
+        label: 'Admin Panel',
+        path: '/admin',
+      },
+      ...baseItems.slice(1)
+    ];
   }
 
-  return items;
+  return baseItems;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
