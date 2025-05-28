@@ -6,6 +6,7 @@ import QuickButtons from './QuickButtons';
 import { useChat } from '../context/ChatContext';
 import BadgeNotification from './BadgeNotification';
 import { BadgeType } from '../types';
+import { AnimatePresence } from 'framer-motion';
 
 interface ChatInterfaceProps {
   onMenuClick: () => void;
@@ -84,12 +85,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
         <InputArea />
       </div>
 
-      {currentBadge && (
-        <BadgeNotification 
-          badge={currentBadge} 
-          onClose={() => setCurrentBadge(null)} 
-        />
-      )}
+      <AnimatePresence>
+        {currentBadge && (
+          <BadgeNotification 
+            badge={currentBadge} 
+            onClose={() => setCurrentBadge(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
