@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { MessageType, ProductType } from '../types';
+import { MessageType, ProductType, BadgeType } from '../types';
 import { v4 as uuidv4 } from '../utils/mockUuid';
 import { getFormattedTime } from '../utils/dateUtils';
 import { sendChatMessage } from '../services/chatService';
@@ -77,6 +77,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         time: getFormattedTime(),
         products: response.products,
         suggestions: response.suggestions,
+        badges_earned: response.badges_earned,
       };
       
       // Update products if they are included in the response

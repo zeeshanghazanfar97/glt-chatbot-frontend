@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from './Header';
 import MessageList from './MessageList';
 import InputArea from './InputArea';
 import QuickButtons from './QuickButtons';
 import { useChat } from '../context/ChatContext';
+import BadgeNotification from './BadgeNotification';
+import { BadgeType } from '../types';
 
 interface ChatInterfaceProps {
   onMenuClick: () => void;
@@ -14,9 +16,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const [currentBadge, setCurrentBadge] = useState<BadgeType | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    // Check for badges in the latest message
+    const latestMessage = messages[messages.length - 1];
+    if (latestMessage?.badges_earned?.length) {
+      setCurrentBadge(latestMessage.badges_earned[0]);
+    }
   }, [messages]);
 
   // Handle viewport height changes (e.g., when keyboard shows/hides)
@@ -74,6 +83,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onMenuClick }) => {
         <QuickButtons />
         <InputArea />
       </div>
+
+      {currentBadge && (
+        <BadgeNotification 
+          badge={currentBadge} 
+          onClose={() => setCurrentBadge(null)} 
+        />
+      )}
     </div>
   );
 };

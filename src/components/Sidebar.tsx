@@ -3,6 +3,7 @@ import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, Layout
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useUser } from '../context/UserContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,54 +11,63 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-const menuItems = [
-  {
-    id: 'dashboard',
-    icon: <LayoutDashboard size={20} />,
-    label: 'Dashboard',
-    path: '/dashboard',
-  },
-  {
-    id: 'admin',
-    icon: <Settings size={20} />,
-    label: 'Admin Panel',
-    path: '/admin',
-  },
-  {
-    id: 'hygiene',
-    icon: <MessageSquare size={20} />,
-    label: 'Hygiene Tips',
-    path: '/',
-  },
-  {
-    id: 'kit',
-    icon: <Package size={20} />,
-    label: 'Free Kit Info',
-    path: '/',
-  },
-  {
-    id: 'products',
-    icon: <ShoppingBag size={20} />,
-    label: 'Add-On Products',
-    path: '/',
-  },
-  {
-    id: 'puberty',
-    icon: <Heart size={20} />,
-    label: 'Learn About Puberty',
-    path: '/',
-  },
-  {
-    id: 'wellness',
-    icon: <Smile size={20} />,
-    label: 'Wellness & Confidence',
-    path: '/',
-  },
-];
+const getMenuItems = (isAdmin: boolean) => {
+  const items = [
+    {
+      id: 'dashboard',
+      icon: <LayoutDashboard size={20} />,
+      label: 'Dashboard',
+      path: '/dashboard',
+    },
+    {
+      id: 'hygiene',
+      icon: <MessageSquare size={20} />,
+      label: 'Hygiene Tips',
+      path: '/',
+    },
+    {
+      id: 'kit',
+      icon: <Package size={20} />,
+      label: 'Free Kit Info',
+      path: '/',
+    },
+    {
+      id: 'products',
+      icon: <ShoppingBag size={20} />,
+      label: 'Add-On Products',
+      path: '/',
+    },
+    {
+      id: 'puberty',
+      icon: <Heart size={20} />,
+      label: 'Learn About Puberty',
+      path: '/',
+    },
+    {
+      id: 'wellness',
+      icon: <Smile size={20} />,
+      label: 'Wellness & Confidence',
+      path: '/',
+    },
+  ];
+
+  if (isAdmin) {
+    items.splice(1, 0, {
+      id: 'admin',
+      icon: <Settings size={20} />,
+      label: 'Admin Panel',
+      path: '/admin',
+    });
+  }
+
+  return items;
+};
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { user } = useUser();
+  const menuItems = getMenuItems(user?.is_admin || false);
 
   const handleLogout = async () => {
     await logout();
