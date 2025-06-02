@@ -1,38 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { MessageCircle, Send, Code, Sparkles, Heart, Shield, Users, Award } from 'lucide-react';
+import { Heart, MessageCircle, Send, Code, Sparkles, Shield, Users, Award, Calendar, Gift, BookOpen } from 'lucide-react';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
-const wellnessFeatures = [
+const features = [
   {
-    title: "Wellness Guidance",
-    desc: "Get expert advice on physical and mental wellness, tailored for young girls.",
+    title: "Believe in Yourself",
+    desc: "Your beginning doesn't define your future — your belief does. Join a community that empowers you to reach your full potential.",
     icon: <Sparkles className="w-6 h-6" />,
     color: "from-purple-400 to-pink-400"
   },
   {
-    title: "Hygiene Tips",
-    desc: "Learn about personal hygiene, menstrual health, and safe practices.",
-    icon: <Shield className="w-6 h-6" />,
+    title: "Scholarship Opportunity",
+    desc: "Share your story about belief and how it shaped who you are for a chance to win a scholarship award.",
+    icon: <Gift className="w-6 h-6" />,
     color: "from-blue-400 to-cyan-400"
   },
   {
-    title: "Product Ordering",
-    desc: "Order hygiene and wellness products directly from our trusted partners.",
-    icon: <Heart className="w-6 h-6" />,
+    title: "Tech & Leadership",
+    desc: "From wellness to AI, leadership to life skills, discover opportunities that begin with one core belief: you belong.",
+    icon: <BookOpen className="w-6 h-6" />,
     color: "from-pink-400 to-rose-400"
   },
   {
-    title: "Empowerment",
-    desc: "Access resources, stories, and mentorship to inspire your future.",
-    icon: <Award className="w-6 h-6" />,
+    title: "Hygiene Ambassador",
+    desc: "Join our Fall 2025 pilot program to help provide free hygiene kits through our AI-powered system.",
+    icon: <Shield className="w-6 h-6" />,
     color: "from-orange-400 to-yellow-400"
   }
 ];
+
 const DeveloperBadge = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  
   return (
     <div className="fixed left-4 bottom-4 z-50">
       <div
@@ -55,23 +57,18 @@ const DeveloperBadge = () => {
           }
         }}
       >
-        {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] animate-gradient-x"></div>
-        
-        {/* Sparkle effect */}
         <div className={`absolute inset-0 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           <div className="absolute top-2 left-3 w-1 h-1 bg-white rounded-full animate-ping"></div>
           <div className="absolute top-4 right-3 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
           <div className="absolute bottom-3 left-2 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
         </div>
         <div className="relative z-10 flex items-center text-white">
-          {/* Icon */}
           <div className={`flex items-center justify-center transition-all duration-300 ${
             isExpanded ? 'mr-3' : 'mx-auto'
           }`}>
             <Code className={`transition-all duration-300 ${isExpanded ? 'w-5 h-5' : 'w-6 h-6'}`} />
           </div>
-          {/* Expanded content */}
           <div className={`
             transition-all duration-500 overflow-hidden
             ${isExpanded ? 'max-w-xs opacity-100' : 'max-w-0 opacity-0'}
@@ -95,7 +92,6 @@ const DeveloperBadge = () => {
             </div>
           </div>
         </div>
-        {/* Subtle shine effect */}
         <div className={`
           absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0
           transition-all duration-1000 transform -skew-x-12
@@ -103,7 +99,6 @@ const DeveloperBadge = () => {
         `}></div>
       </div>
       
-      {/* Tooltip for collapsed state */}
       {!isExpanded && isHovered && (
         <div className="absolute left-16 bottom-4 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap animate-fadeIn">
           Developed by ZeeIT Solutions
@@ -113,6 +108,7 @@ const DeveloperBadge = () => {
     </div>
   );
 };
+
 const FeatureCard = ({ feature, index }) => {
   return (
     <div className={`
@@ -122,7 +118,6 @@ const FeatureCard = ({ feature, index }) => {
     `}
     style={{ animationDelay: `${index * 0.1}s` }}
     >
-      {/* Gradient background on hover */}
       <div className={`
         absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 
         group-hover:opacity-5 transition-opacity duration-500
@@ -146,11 +141,11 @@ const FeatureCard = ({ feature, index }) => {
         </p>
       </div>
       
-      {/* Decorative corner */}
       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-100 to-transparent opacity-50 rounded-bl-full"></div>
     </div>
   );
 };
+
 const LandingPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -173,7 +168,6 @@ const LandingPage = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isWidgetOpen]);
 
-  // Load visitorId on mount:
   useEffect(() => {
     FingerprintJS.load().then(fp => {
       fp.get().then(result => {
@@ -192,35 +186,35 @@ const LandingPage = () => {
     try {
       const bodyPayload = {
         message: userMsg,
+        visitorId
       };
-
-      // Add visitorId if available
-      if (visitorId) {
-        bodyPayload.visitorId = visitorId;
-      }
 
       const res = await fetch('https://api.girlzlovetech.org/api/public-chatbot/message/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload),
       });
+      
       if (res.status === 429) {
         const data = await res.json();
         setMessages(msgs => [...msgs, { from: 'bot', text: data.error || "You are sending messages too quickly. Please wait and try again." }]);
-        setLoading(false);
         return;
       }
+      
       if (!res.ok) throw new Error('Network error');
       const data = await res.json();
       setMessages(msgs => [...msgs, { from: 'bot', text: data.response || "Sorry, I didn't get that." }]);
     } catch {
       setMessages(msgs => [...msgs, { from: 'bot', text: "Sorry, something went wrong. Please try again." }]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+
   const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleSend();
   };
+
   const handleTopButtonClick = () => {
     if (isAuthenticated) {
       navigate('/app');
@@ -228,18 +222,15 @@ const LandingPage = () => {
       navigate('/login');
     }
   };
-  const handleRegisterClick = () => {
-    navigate('/register');
-  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-x-hidden">
-      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-4 -right-4 w-72 h-72 bg-pink-200 rounded-full opacity-20 animate-float"></div>
         <div className="absolute top-1/2 -left-4 w-96 h-96 bg-purple-200 rounded-full opacity-15 animate-float-delayed"></div>
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-200 rounded-full opacity-10 animate-float"></div>
       </div>
-      {/* Navigation */}
+
       <nav className="relative z-40 w-full flex justify-between items-center px-6 py-4 bg-white/70 backdrop-blur-xl shadow-sm fixed top-0 left-0 border-b border-white/20">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-[#FC7DAF] to-[#FFA4C8] rounded-xl flex items-center justify-center shadow-lg">
@@ -249,7 +240,7 @@ const LandingPage = () => {
             <span className="text-xl font-bold bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
               Girlz Love Tech
             </span>
-            <div className="text-xs text-gray-500 -mt-1">Wellness & Empowerment</div>
+            <div className="text-xs text-gray-500 -mt-1">Class of 2025</div>
           </div>
         </div>
         
@@ -263,34 +254,34 @@ const LandingPage = () => {
           <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
         </button>
       </nav>
-      {/* Hero Section */}
+
       <section className="relative z-10 flex flex-col-reverse lg:flex-row items-center justify-between gap-12 px-6 md:px-16 pt-32 pb-16">
         <div className="flex-1 space-y-8">
           <div className="space-y-6">
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
               <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Empowering Young Girls
+                Welcome, Class of 2025!
               </span>
               <br />
               <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
-                for a Brighter Future
+                Benton Harbor High School
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed">
-              Your trusted companion for wellness, hygiene, and personal growth. 
-              Get expert guidance, order essential products, and chat with our AI assistant 
-              for instant support—anytime, anywhere.
+              Your beginning doesn't define your future — your belief does. As a proud Benton Harbor alum, 
+              I'm here to help you discover your power, potential, and place in the world of technology and beyond.
             </p>
           </div>
+
           <div className="flex flex-wrap gap-4">
             <button
+              onClick={() => navigate('/register')}
               className="group relative overflow-hidden bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              onClick={handleRegisterClick}
             >
               <span className="relative z-10 flex items-center gap-2">
-                Start your Journey
-                <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Join Scholarship Raffle
+                <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform" />
               </span>
             </button>
             
@@ -298,41 +289,43 @@ const LandingPage = () => {
               className="group flex items-center gap-2 bg-white/80 hover:bg-white text-gray-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-gray-200"
               onClick={() => navigate('/learn-more')}
             >
-              <Users className="w-4 h-4" />
-              Learn More
+              <Shield className="w-4 h-4" />
+              Become an Ambassador
             </button>
           </div>
         </div>
+
         <div className="flex-1 flex justify-center">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
             <img
-              src="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&w=600&h=600&fit=crop"
-              alt="Wellness for girls"
+              src="https://images.pexels.com/photos/3861959/pexels-photo-3861959.jpeg"
+              alt="Empowered students"
               className="relative z-10 rounded-3xl shadow-2xl w-full max-w-md hover:scale-105 transition-transform duration-500"
               loading="lazy"
             />
           </div>
         </div>
       </section>
-      {/* Features Section */}
+
       <section className="relative z-10 px-6 md:px-16 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Everything You Need to 
-            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> Thrive</span>
+            Powered by 
+            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> Belief</span>
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Comprehensive wellness solutions designed specifically for young women
+            From wellness to technology, we're here to support your journey
           </p>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {wellnessFeatures.map((feature, index) => (
+          {features.map((feature, index) => (
             <FeatureCard key={index} feature={feature} index={index} />
           ))}
         </div>
       </section>
-      {/* Chatbot Widget */}
+
       <div className="fixed bottom-6 right-6 z-50">
         {!isWidgetOpen && (
           <button
@@ -345,6 +338,7 @@ const LandingPage = () => {
             </div>
           </button>
         )}
+
         {isWidgetOpen && (
           <div className="w-80 max-w-[90vw] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 flex flex-col overflow-hidden animate-slideUp">
             <div className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] px-6 py-4 flex items-center justify-between">
@@ -353,8 +347,8 @@ const LandingPage = () => {
                   <MessageCircle className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <span className="text-white font-semibold">Wellness Assistant</span>
-                  <div className="text-white/80 text-xs">Always here to help</div>
+                  <span className="text-white font-semibold">GLT Assistant</span>
+                  <div className="text-white/80 text-xs">Ask about scholarships & more</div>
                 </div>
               </div>
               <button
@@ -364,6 +358,7 @@ const LandingPage = () => {
                 ✕
               </button>
             </div>
+
             <div className="flex-1 flex flex-col p-4 space-y-3 overflow-y-auto max-h-80 min-h-48">
               {messages.map((msg, i) => (
                 <div
@@ -392,13 +387,14 @@ const LandingPage = () => {
               )}
               <div ref={bottomRef} />
             </div>
+
             <div className="p-4 border-t border-gray-100">
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
                   type="text"
                   className="flex-1 px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300 text-sm bg-white/80 backdrop-blur-sm"
-                  placeholder="Ask me anything..."
+                  placeholder="Ask about scholarships..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleInputKey}
@@ -416,7 +412,9 @@ const LandingPage = () => {
           </div>
         )}
       </div>
+
       <DeveloperBadge />
+
       <style jsx>{`
         @keyframes gradient-x {
           0%, 100% { background-position: 0% 50%; }
@@ -462,4 +460,5 @@ const LandingPage = () => {
     </div>
   );
 };
+
 export default LandingPage;
