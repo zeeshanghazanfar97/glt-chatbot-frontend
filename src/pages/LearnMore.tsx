@@ -174,21 +174,21 @@ const LearnMore = () => {
                 <Phone className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Call Us</h3>
-              <p className="text-gray-600">+1 (555) 123-GIRL</p>
+              <p className="text-gray-600">+1 (269) 2771141</p>
             </div>
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-2xl text-center">
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-gray-600">support@girlzlovetech.com</p>
+              <p className="text-gray-600">hello@girlzlovetech.com</p>
             </div>
             <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-2xl text-center">
               <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Visit Us</h3>
-              <p className="text-gray-600">123 Wellness Ave, Health City</p>
+              <p className="text-gray-600">55 Mallory Ave, Jersey City NJ</p>
             </div>
           </div>
         </div>
