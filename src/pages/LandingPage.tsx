@@ -199,7 +199,7 @@ const LandingPage = () => {
         bodyPayload.visitorId = visitorId;
       }
 
-      const res = await fetch('https://glt-chat-backend.izeeshan.dev/api/public-chatbot/message/', {
+      const res = await fetch('https://api.girlzlovetech.org/api/public-chatbot/message/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload),

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ResponseType } from '../types';
 import authService from './authService';
 
-const API_BASE_URL = 'https://glt-chat-backend.izeeshan.dev';
+const API_BASE_URL = 'https://api.girlzlovetech.org';
 
 export const sendChatMessage = async (message: string): Promise<ResponseType> => {
   try {
