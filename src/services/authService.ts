@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://glt-chat-backend.izeeshan.dev';
+const API_BASE_URL = 'https://api.girlzlovetech.org';
 
 export type UserType = 'student' | 'teacher' | 'parent' | 'community_member' | 'sponsor';
 
