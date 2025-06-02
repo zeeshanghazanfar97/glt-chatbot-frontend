@@ -299,7 +299,7 @@ const LandingPage = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
             <img
-              src="https://images.pexels.com/photos/3861959/pexels-photo-3861959.jpeg"
+              src="https://i.ibb.co/1JGCn4ZD/IMG-9464.jpg"
               alt="Empowered students"
               className="relative z-10 rounded-3xl shadow-2xl w-full max-w-md hover:scale-105 transition-transform duration-500"
               loading="lazy"
