@@ -125,7 +125,7 @@ const AdminDashboard: React.FC = () => {
           Please use the backend admin panel to manage your data and settings.
         </p>
         <a
-          href="https://glt-chat-backend.izeeshan.dev/admin"
+          href="https://api.girlzlovetech.org/admin"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition-colors"
