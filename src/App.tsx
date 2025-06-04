@@ -17,6 +17,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
 import HygieneTips from './pages/HygieneTips';
+import WellnessConfidence from './pages/WellnessConfidence';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -38,6 +39,7 @@ const AnimatedRoutes = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/hygiene-tips" element={<HygieneTips />} />
+        <Route path="/wellness-confidence" element={<WellnessConfidence />} />
         <Route 
           path="/app" 
           element={

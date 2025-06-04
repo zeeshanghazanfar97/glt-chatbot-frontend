@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut } from 'lucide-react';
+import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -26,12 +26,6 @@ const getMenuItems = (isAdmin: boolean) => {
       path: '/hygiene-tips',
     },
     {
-      id: 'kit',
-      icon: <Package size={20} />,
-      label: 'Free Kit Info',
-      path: '/',
-    },
-    {
       id: 'products',
       icon: <ShoppingBag size={20} />,
       label: 'Add-On Products',
@@ -47,7 +41,7 @@ const getMenuItems = (isAdmin: boolean) => {
       id: 'wellness',
       icon: <Smile size={20} />,
       label: 'Wellness & Confidence',
-      path: '/',
+      path: '/wellness-confidence',
     },
   ];
 
