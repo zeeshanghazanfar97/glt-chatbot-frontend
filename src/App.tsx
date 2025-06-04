@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import ChatInterface from './components/ChatInterface';
@@ -16,6 +16,7 @@ import { UserProvider } from './context/UserContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
+import HygieneTips from './pages/HygieneTips';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const AnimatedRoutes = () => {
         <Route path="/request-reset" element={<RequestPasswordReset />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/hygiene-tips" element={<HygieneTips />} />
         <Route 
           path="/app" 
           element={

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MessageSquare, Package, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useUser } from '../context/UserContext';
 
@@ -21,9 +21,9 @@ const getMenuItems = (isAdmin: boolean) => {
     },
     {
       id: 'hygiene',
-      icon: <MessageSquare size={20} />,
+      icon: <Heart size={20} />,
       label: 'Hygiene Tips',
-      path: '/',
+      path: '/hygiene-tips',
     },
     {
       id: 'kit',
@@ -38,10 +38,10 @@ const getMenuItems = (isAdmin: boolean) => {
       path: '/',
     },
     {
-      id: 'puberty',
-      icon: <Heart size={20} />,
-      label: 'Learn About Puberty',
-      path: '/',
+      id: 'chat',
+      icon: <MessageSquare size={20} />,
+      label: 'Chat with GLT',
+      path: '/app',
     },
     {
       id: 'wellness',
@@ -69,6 +69,7 @@ const getMenuItems = (isAdmin: boolean) => {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuth();
   const { user } = useUser();
   const menuItems = getMenuItems(user?.is_admin || false);
@@ -139,13 +140,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
                       onClose();
                     }
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-pink-50 
-                    rounded-lg transition-colors duration-200 group"
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 group
+                    ${location.pathname === item.path 
+                      ? 'bg-pink-50 text-pink-600' 
+                      : 'text-gray-700 hover:bg-pink-50'}`}
                 >
-                  <span className="text-pink-500 group-hover:text-pink-600 transition-colors">
+                  <span className={`transition-colors ${
+                    location.pathname === item.path 
+                      ? 'text-pink-600' 
+                      : 'text-pink-500 group-hover:text-pink-600'
+                  }`}>
                     {item.icon}
                   </span>
-                  <span className="text-sm font-medium group-hover:text-pink-600 transition-colors">
+                  <span className={`text-sm font-medium transition-colors ${
+                    location.pathname === item.path
+                      ? 'text-pink-600'
+                      : 'group-hover:text-pink-600'
+                  }`}>
                     {item.label}
                   </span>
                 </motion.button>
