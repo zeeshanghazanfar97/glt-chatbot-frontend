@@ -29,7 +29,7 @@ const getMenuItems = (isAdmin: boolean) => {
       id: 'products',
       icon: <ShoppingBag size={20} />,
       label: 'Add-On Products',
-      path: '/',
+      path: '/products',
     },
     {
       id: 'chat',

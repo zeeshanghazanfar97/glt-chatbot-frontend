@@ -18,6 +18,7 @@ import LandingPage from './pages/LandingPage';
 import LearnMore from './pages/LearnMore';
 import HygieneTips from './pages/HygieneTips';
 import WellnessConfidence from './pages/WellnessConfidence';
+import Products from './pages/Products';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -40,6 +41,7 @@ const AnimatedRoutes = () => {
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/hygiene-tips" element={<HygieneTips />} />
         <Route path="/wellness-confidence" element={<WellnessConfidence />} />
+        <Route path="/products" element={<Products />} />
         <Route 
           path="/app" 
           element={
