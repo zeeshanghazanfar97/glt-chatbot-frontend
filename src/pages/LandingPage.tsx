@@ -1,31 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, Send, Code, Sparkles, Shield, Users, Award, Calendar, Gift, BookOpen } from 'lucide-react';
+import { Heart, MessageCircle, Send, Code, Sparkles, Shield, Users, Award, Calendar, Gift, BookOpen, Bot, Zap, Brain, Target } from 'lucide-react';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const features = [
   {
-    title: "Believe in Yourself",
-    desc: "Your beginning doesn't define your future — your belief does. Join a community that empowers you to reach your full potential.",
-    icon: <Sparkles className="w-6 h-6" />,
+    title: "AI-Powered Wellness Support",
+    desc: "Get instant, personalized guidance on hygiene, health, and wellness from our intelligent chatbot available 24/7.",
+    icon: <Bot className="w-6 h-6" />,
     color: "from-purple-400 to-pink-400"
   },
   {
-    title: "Scholarship Opportunity",
-    desc: "Share your story about belief and how it shaped who you are for a chance to win a scholarship award.",
-    icon: <Gift className="w-6 h-6" />,
+    title: "Smart Product Recommendations",
+    desc: "Receive tailored product suggestions based on your needs, with detailed information and trusted reviews.",
+    icon: <Zap className="w-6 h-6" />,
     color: "from-blue-400 to-cyan-400"
   },
   {
-    title: "Tech & Leadership",
-    desc: "From wellness to AI, leadership to life skills, discover opportunities that begin with one core belief: you belong.",
-    icon: <BookOpen className="w-6 h-6" />,
+    title: "Educational Conversations",
+    desc: "Learn about technology, career paths, and life skills through engaging, age-appropriate conversations.",
+    icon: <Brain className="w-6 h-6" />,
     color: "from-pink-400 to-rose-400"
   },
   {
-    title: "Hygiene Ambassador",
-    desc: "Join our Fall 2025 pilot program to help provide free hygiene kits through our AI-powered system.",
+    title: "Safe & Confidential",
+    desc: "Chat in a secure environment designed specifically for young women, with privacy and safety as our top priorities.",
     icon: <Shield className="w-6 h-6" />,
     color: "from-orange-400 to-yellow-400"
   }
@@ -151,7 +151,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { from: 'bot', text: "Hi! I'm your wellness chatbot. Ask me anything about hygiene, wellness, or products!" }
+    { from: 'bot', text: "Hi! I'm GLT, your AI wellness assistant. I can help with hygiene tips, product recommendations, tech education, and career guidance. What would you like to know?" }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -240,7 +240,7 @@ const LandingPage = () => {
             <span className="text-xl font-bold bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
               Girlz Love Tech
             </span>
-            <div className="text-xs text-gray-500 -mt-1">Class of 2025</div>
+            <div className="text-xs text-gray-500 -mt-1">AI Wellness Assistant</div>
           </div>
         </div>
         
@@ -260,17 +260,18 @@ const LandingPage = () => {
           <div className="space-y-6">
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
               <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Welcome, Class of 2025!
+                Meet Your AI
               </span>
               <br />
               <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent">
-                Benton Harbor High School
+                Wellness Assistant
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed">
-              Your beginning doesn't define your future — your belief does. As a proud Benton Harbor alum, 
-              I'm here to help you discover your power, potential, and place in the world of technology and beyond.
+              Get instant, personalized guidance on wellness, hygiene, technology, and career paths. 
+              Our AI chatbot is designed specifically for young women, providing safe, confidential, 
+              and age-appropriate support 24/7.
             </p>
           </div>
 
@@ -280,8 +281,8 @@ const LandingPage = () => {
               className="group relative overflow-hidden bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] hover:from-[#E76694] hover:to-[#FF9DBF] text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Join Scholarship Raffle
-                <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Start Your Journey
+                <MessageCircle className="w-4 h-4 group-hover:rotate-12 transition-transform" />
               </span>
             </button>
             
@@ -289,8 +290,8 @@ const LandingPage = () => {
               className="group flex items-center gap-2 bg-white/80 hover:bg-white text-gray-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 backdrop-blur-sm border border-gray-200"
               onClick={() => navigate('/learn-more')}
             >
-              <Shield className="w-4 h-4" />
-              Become an Ambassador
+              <Target className="w-4 h-4" />
+              More Details
             </button>
           </div>
         </div>
@@ -298,12 +299,38 @@ const LandingPage = () => {
         <div className="flex-1 flex justify-center">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
-            <img
-              src="https://i.ibb.co/1JGCn4ZD/IMG-9464.jpg"
-              alt="Empowered students"
-              className="relative z-10 rounded-3xl shadow-2xl w-full max-w-md hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
+            <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 max-w-md hover:scale-105 transition-transform duration-500">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#FC7DAF] to-[#FFA4C8] rounded-full flex items-center justify-center">
+                  <Bot className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">GLT Assistant</h3>
+                  <p className="text-sm text-gray-500">Always here to help</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-gray-100 rounded-2xl p-4">
+                  <p className="text-sm text-gray-700">
+                    "Hi! I can help you with hygiene tips, product recommendations, 
+                    tech education, and career guidance. What would you like to know?"
+                  </p>
+                </div>
+                
+                <div className="flex gap-2 flex-wrap">
+                  <span className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-medium">
+                    Wellness Tips
+                  </span>
+                  <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
+                    Tech Careers
+                  </span>
+                  <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-medium">
+                    Product Help
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -312,10 +339,10 @@ const LandingPage = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Powered by 
-            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> Belief</span>
+            <span className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] bg-clip-text text-transparent"> AI Intelligence</span>
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            From wellness to technology, we're here to support your journey
+            Experience the future of personalized wellness support through our advanced chatbot
           </p>
         </div>
 
@@ -323,6 +350,34 @@ const LandingPage = () => {
           {features.map((feature, index) => (
             <FeatureCard key={index} feature={feature} index={index} />
           ))}
+        </div>
+      </section>
+
+      <section className="relative z-10 px-6 md:px-16 py-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl px-8 py-12 text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Chat with GLT?
+            </h2>
+            <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
+              Join thousands of young women who trust GLT for personalized wellness guidance, 
+              educational support, and confident decision-making.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/register')}
+                className="bg-white text-purple-600 font-semibold px-8 py-4 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-lg"
+              >
+                Start Chatting Now
+              </button>
+              <button
+                onClick={() => setIsWidgetOpen(true)}
+                className="border-2 border-white text-white font-semibold px-8 py-4 rounded-xl hover:bg-white hover:text-purple-600 transition-all duration-300"
+              >
+                Try Demo Chat
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -344,11 +399,11 @@ const LandingPage = () => {
             <div className="bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4 text-white" />
+                  <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div>
                   <span className="text-white font-semibold">GLT Assistant</span>
-                  <div className="text-white/80 text-xs">Ask about scholarships & more</div>
+                  <div className="text-white/80 text-xs">Your AI wellness guide</div>
                 </div>
               </div>
               <button
@@ -394,7 +449,7 @@ const LandingPage = () => {
                   ref={inputRef}
                   type="text"
                   className="flex-1 px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-300 text-sm bg-white/80 backdrop-blur-sm"
-                  placeholder="Ask about scholarships..."
+                  placeholder="Ask about wellness, tech, careers..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleInputKey}
@@ -433,7 +488,7 @@ const LandingPage = () => {
         
         @keyframes float-delayed {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-30px) rotate(-5deg); }
+          50% { transform: translateY(-30px) rotate(-30px); }
         }
         
         @keyframes slideUp {
