@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { MessageType } from '../types';
 import { Bot, User } from 'lucide-react';
 import ProductCard from './ProductCard';
+import { useChat } from '../context/ChatContext';
 
 interface MessageProps {
   message: MessageType;
@@ -10,6 +11,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({ message }) => {
   const isBot = message.sender === 'bot';
+  const { sendMessage } = useChat();
   
   return (
     <div 

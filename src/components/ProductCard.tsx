@@ -12,10 +12,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { cartItems, updateCartQuantity } = useChat();
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
   const quantity = cartItems[product.id] || 0;
 
   const handleQuantityChange = (newQuantity: number) => {
     updateCartQuantity(product.id, Math.max(0, newQuantity));
+  };
+
+  const handleAddToCart = () => {
+    if (quantity === 0) {
+      handleQuantityChange(1);
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), 2000);
+    }
   };
 
   return (
@@ -26,12 +35,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         whileHover={{ y: -1 }}
         onClick={() => setShowDetails(true)}
       >
-        <div className="aspect-square overflow-hidden">
+        <div className="aspect-square overflow-hidden relative">
           <img 
             src={product.image_url} 
             alt={product.title}
             className="w-full h-full object-cover"
           />
+          {quantity > 0 && (
+            <div className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+              {quantity}
+            </div>
+          )}
         </div>
         <div className="p-2">
           <h3 className="text-xs font-medium text-gray-900 line-clamp-1">{product.title}</h3>
@@ -115,6 +129,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Cart quantity indicator */}
+                  {quantity > 0 && (
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-green-500 text-white rounded-full px-3 py-2 shadow-lg">
+                        <div className="flex items-center gap-1.5">
+                          <ShoppingCart className="w-4 h-4" />
+                          <span className="text-sm font-bold">{quantity}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Product Details */}
@@ -179,7 +205,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   {/* Quantity Selector */}
                   <div className="flex items-center bg-gray-100 rounded-2xl p-1">
                     <button
-                      onClick={() => handleQuantityChange(quantity - 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuantityChange(quantity - 1);
+                      }}
                       className="w-10 h-10 rounded-xl text-gray-500 flex items-center justify-center
                         hover:bg-white hover:text-pink-500 transition-all disabled:opacity-50 disabled:hover:bg-gray-100 disabled:hover:text-gray-500"
                       disabled={quantity === 0}
@@ -190,7 +219,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                       {quantity}
                     </span>
                     <button
-                      onClick={() => handleQuantityChange(quantity + 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuantityChange(quantity + 1);
+                      }}
                       className="w-10 h-10 rounded-xl text-gray-500 flex items-center justify-center
                         hover:bg-white hover:text-pink-500 transition-all disabled:opacity-50"
                       disabled={!product.in_stock}
@@ -201,23 +233,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                   {/* Add to Cart Button */}
                   <button
-                    onClick={() => {
-                      if (quantity === 0) {
-                        handleQuantityChange(1);
-                      }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart();
                     }}
                     className={`flex-1 flex items-center justify-center gap-2 h-12 px-6 rounded-2xl 
                       font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] ${
                         quantity > 0
                           ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                           : 'bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:from-pink-600 hover:to-purple-700'
-                      }`}
+                      } ${justAdded ? 'animate-pulse' : ''}`}
                     disabled={!product.in_stock}
                   >
                     {quantity > 0 ? (
                       <>
                         <Check className="w-5 h-5" />
-                        Added to Cart
+                        In Cart ({quantity})
                       </>
                     ) : (
                       <>
