@@ -299,38 +299,12 @@ const LandingPage = () => {
         <div className="flex-1 flex justify-center">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FC7DAF] to-[#FFA4C8] rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
-            <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 max-w-md hover:scale-105 transition-transform duration-500">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#FC7DAF] to-[#FFA4C8] rounded-full flex items-center justify-center">
-                  <Bot className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900">GLT Assistant</h3>
-                  <p className="text-sm text-gray-500">Always here to help</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="bg-gray-100 rounded-2xl p-4">
-                  <p className="text-sm text-gray-700">
-                    "Hi! I can help you with hygiene tips, product recommendations, 
-                    tech education, and career guidance. What would you like to know?"
-                  </p>
-                </div>
-                
-                <div className="flex gap-2 flex-wrap">
-                  <span className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-medium">
-                    Wellness Tips
-                  </span>
-                  <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
-                    Tech Careers
-                  </span>
-                  <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-medium">
-                    Product Help
-                  </span>
-                </div>
-              </div>
-            </div>
+            <img
+              src="https://i.ibb.co/1JGCn4ZD/IMG-9464.jpg"
+              alt="Empowered students"
+              className="relative z-10 rounded-3xl shadow-2xl w-full max-w-md hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
@@ -488,7 +462,7 @@ const LandingPage = () => {
         
         @keyframes float-delayed {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-30px) rotate(-30px); }
+          50% { transform: translateY(-30px) rotate(-5deg); }
         }
         
         @keyframes slideUp {
