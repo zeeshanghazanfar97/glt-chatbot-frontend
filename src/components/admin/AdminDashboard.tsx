@@ -1,18 +1,30 @@
 import React from 'react';
 import { useUser } from '../../context/UserContext';
-import { ExternalLink, Users, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ExternalLink, Users, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame, ArrowLeft } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
 
   if (!user?.is_admin) {
     return (
       <div className="relative min-h-screen p-6">
+        {/* Header with Back Button */}
+        <div className="flex items-center gap-4 mb-6">
+          <button
+            onClick={() => navigate('/app')}
+            className="p-2 hover:bg-pink-50 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+            aria-label="Back to chat"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+        </div>
+
         {/* Blurred Preview */}
         <div className="filter blur-sm pointer-events-none">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <div className="bg-white p-4 rounded-xl shadow-sm border border-pink-100">
                 <div className="flex items-center gap-3">
@@ -119,6 +131,17 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-pink-50 to-purple-50">
+      {/* Header with Back Button */}
+      <div className="absolute top-6 left-6">
+        <button
+          onClick={() => navigate('/app')}
+          className="p-2 hover:bg-white/20 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+          aria-label="Back to chat"
+        >
+          <ArrowLeft size={24} />
+        </button>
+      </div>
+
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-lg w-full text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Admin Dashboard</h2>
         <p className="text-gray-600 mb-6">

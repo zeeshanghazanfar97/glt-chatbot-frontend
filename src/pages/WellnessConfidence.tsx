@@ -1,7 +1,10 @@
 import React from 'react';
-import { Heart, Brain, Star, Shield, Target, Sparkles, ArrowRight, Leaf } from 'lucide-react';
+import { Heart, Brain, Star, Shield, Target, Sparkles, ArrowRight, Leaf, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const WellnessConfidence = () => {
+  const navigate = useNavigate();
+
   const sections = [
     {
       title: "Self-Love & Acceptance",
@@ -72,12 +75,24 @@ const WellnessConfidence = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header with Back Button */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => navigate('/app')}
+            className="p-2 hover:bg-pink-50 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+            aria-label="Back to chat"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <h1 className="text-2xl font-bold text-gray-800">Wellness & Confidence Guide</h1>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-2xl shadow-lg text-white mb-6">
             <Sparkles className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Wellness & Confidence Guide</h1>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Build Your Confidence</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Discover powerful strategies for building self-confidence, maintaining emotional wellness, 
             and becoming the best version of yourself. Remember, confidence is a skill that grows with practice!
@@ -136,7 +151,7 @@ const WellnessConfidence = () => {
             greater confidence and wellness. Let's work together to help you shine!
           </p>
           <button 
-            onClick={() => window.location.href = '/app'}
+            onClick={() => navigate('/app')}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-400 to-pink-500 text-white px-6 py-3 rounded-xl 
               hover:from-pink-500 hover:to-pink-600 transition-all duration-300 shadow-sm hover:shadow-md"
           >

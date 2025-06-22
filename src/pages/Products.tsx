@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Package, Loader } from 'lucide-react';
+import { ShoppingBag, Package, Loader, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../services/authService';
 import { ProductType } from '../types';
 
 const Products = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,9 +49,23 @@ const Products = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-            <p className="text-red-600">{error}</p>
+        <div className="max-w-7xl mx-auto">
+          {/* Header with Back Button */}
+          <div className="flex items-center gap-4 mb-8">
+            <button
+              onClick={() => navigate('/app')}
+              className="p-2 hover:bg-pink-50 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+              aria-label="Back to chat"
+            >
+              <ArrowLeft size={24} />
+            </button>
+            <h1 className="text-2xl font-bold text-gray-800">Add-On Products</h1>
+          </div>
+          
+          <div className="text-center">
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+              <p className="text-red-600">{error}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -59,12 +75,24 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header with Back Button */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => navigate('/app')}
+            className="p-2 hover:bg-pink-50 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+            aria-label="Back to chat"
+          >
+            <ArrowLeft size={24} />
+          </button>
+          <h1 className="text-2xl font-bold text-gray-800">Add-On Products</h1>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-2xl shadow-lg text-white mb-6">
             <ShoppingBag className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Add-On Products</h1>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Curated Product Selection</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Explore our curated selection of high-quality hygiene and wellness products, 
             designed to support your personal care journey.
