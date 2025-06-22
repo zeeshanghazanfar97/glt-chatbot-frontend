@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ProductType } from '../types';
 import { useChat } from '../context/ChatContext';
 import { Minus, Plus, ShoppingCart, X, Star, Shield, Truck, Heart, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { createPortal } from 'react-dom';
 
 interface ProductCardProps {
   product: ProductType;
