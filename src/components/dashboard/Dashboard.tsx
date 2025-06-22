@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Book, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame } from 'lucide-react';
+import { Book, Package, Trophy, Clock, X, ChevronRight, Medal, Star, Zap, Brain, Target, Flame, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -101,6 +102,7 @@ const mockLearningModules = [
 const Dashboard: React.FC = () => {
   const [selectedModal, setSelectedModal] = useState<string | null>(null);
   const { dashboardData, refreshDashboard } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     refreshDashboard();
@@ -125,7 +127,17 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">My Dashboard</h1>
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          onClick={() => navigate('/app')}
+          className="p-2 hover:bg-pink-50 rounded-full transition-colors text-pink-500 hover:text-pink-600"
+          aria-label="Back to chat"
+        >
+          <ArrowLeft size={24} />
+        </button>
+        <h1 className="text-2xl font-bold text-gray-800">My Dashboard</h1>
+      </div>
       
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
