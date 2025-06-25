@@ -45,7 +45,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        'https://api.girlzlovetech.org/api/orders/place/',
+        'https://glt-backend.glt-sandbox.com/api/orders/place/',
         orderData,
         {
           headers: {
