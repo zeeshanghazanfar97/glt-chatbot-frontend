@@ -18,13 +18,56 @@ interface SandboxData {
 const Sandbox = () => {
   const navigate = useNavigate();
   const [sandbox, setSandbox] = useState<SandboxData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const createSandbox = async () => {
+  // Check for existing sandbox on component mount
+  useEffect(() => {
+    checkExistingSandbox();
+  }, []);
+
+  const checkExistingSandbox = async () => {
     setLoading(true);
+    setError(null);
+
+    try {
+      const tokens = authService.getTokens();
+      if (!tokens?.access) throw new Error('Not authenticated');
+
+      const response = await axios.get(
+        'https://glt-backend.glt-sandbox.com/api/sandbox',
+        {
+          headers: {
+            Authorization: `Bearer ${tokens.access}`,
+          }
+        }
+      );
+
+      // If we get a 200 response, sandbox exists
+      setSandbox(response.data);
+    } catch (err: any) {
+      // If 404, no sandbox exists - this is expected
+      if (err.response?.status === 404) {
+        setSandbox(null);
+      } else {
+        // Other errors should be displayed
+        console.error('Sandbox check error:', err);
+        setError(
+          err.response?.data?.detail || 
+          err.response?.data?.message || 
+          'Failed to check sandbox status. Please try again.'
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createSandbox = async () => {
+    setCreating(true);
     setError(null);
     setSuccess(null);
 
@@ -53,7 +96,7 @@ const Sandbox = () => {
         'Failed to create sandbox. Please try again.'
       );
     } finally {
-      setLoading(false);
+      setCreating(false);
     }
   };
 
@@ -131,6 +174,21 @@ const Sandbox = () => {
       action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/backend`)
     }
   ];
+
+  // Show loading spinner while checking sandbox status
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Loader className="w-8 h-8 text-white animate-spin" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Checking Sandbox Status</h2>
+          <p className="text-gray-600">Please wait while we check your development environment...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
@@ -266,11 +324,11 @@ const Sandbox = () => {
 
               <button
                 onClick={createSandbox}
-                disabled={loading}
+                disabled={creating}
                 className="group relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 <span className="relative z-10 flex items-center gap-3">
-                  {loading ? (
+                  {creating ? (
                     <>
                       <Loader className="w-6 h-6 animate-spin" />
                       Creating Sandbox...
