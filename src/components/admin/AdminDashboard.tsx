@@ -119,7 +119,7 @@ const AdminDashboard: React.FC = () => {
                 rel="noopener noreferrer"
                 className="text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
               >
-                api.girlzlovetech.org/admin
+                glt-backend.glt-sandbox.com/admin
                 <ExternalLink size={14} />
               </a>
             </div>
