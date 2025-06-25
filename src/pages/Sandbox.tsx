@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap, Clock, Pause, RotateCcw, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../services/authService';
@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface SandboxData {
   user_id: string;
   container_name: string;
-  status: 'running' | 'paused' | 'deleted';
   urls: {
     frontend: string;
     backend: string;
@@ -22,9 +21,6 @@ const Sandbox = () => {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [pausing, setPausing] = useState(false);
-  const [resuming, setResuming] = useState(false);
-  const [resetting, setResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -104,111 +100,6 @@ const Sandbox = () => {
     }
   };
 
-  const pauseSandbox = async () => {
-    setPausing(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const tokens = authService.getTokens();
-      if (!tokens?.access) throw new Error('Not authenticated');
-
-      const response = await axios.post(
-        'https://glt-backend.glt-sandbox.com/api/sandbox/pause/',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${tokens.access}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      // Update sandbox status to paused
-      setSandbox(prev => prev ? { ...prev, status: 'paused' } : null);
-      setSuccess(response.data.message || 'Sandbox paused successfully!');
-    } catch (err: any) {
-      console.error('Sandbox pause error:', err);
-      setError(
-        err.response?.data?.detail || 
-        err.response?.data?.message || 
-        'Failed to pause sandbox. Please try again.'
-      );
-    } finally {
-      setPausing(false);
-    }
-  };
-
-  const resumeSandbox = async () => {
-    setResuming(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const tokens = authService.getTokens();
-      if (!tokens?.access) throw new Error('Not authenticated');
-
-      const response = await axios.post(
-        'https://glt-backend.glt-sandbox.com/api/sandbox/resume/',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${tokens.access}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      // Update sandbox status to running
-      setSandbox(prev => prev ? { ...prev, status: 'running' } : null);
-      setSuccess(response.data.message || 'Sandbox resumed successfully!');
-    } catch (err: any) {
-      console.error('Sandbox resume error:', err);
-      setError(
-        err.response?.data?.detail || 
-        err.response?.data?.message || 
-        'Failed to resume sandbox. Please try again.'
-      );
-    } finally {
-      setResuming(false);
-    }
-  };
-
-  const resetSandbox = async () => {
-    setResetting(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const tokens = authService.getTokens();
-      if (!tokens?.access) throw new Error('Not authenticated');
-
-      const response = await axios.post(
-        'https://glt-backend.glt-sandbox.com/api/sandbox/reset/',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${tokens.access}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      // Update sandbox with the new data from reset response
-      setSandbox(response.data.sandbox);
-      setSuccess(response.data.message || 'Sandbox reset successfully! All changes have been reverted to default.');
-    } catch (err: any) {
-      console.error('Sandbox reset error:', err);
-      setError(
-        err.response?.data?.detail || 
-        err.response?.data?.message || 
-        'Failed to reset sandbox. Please try again.'
-      );
-    } finally {
-      setResetting(false);
-    }
-  };
-
   const deleteSandbox = async () => {
     setDeleting(true);
     setError(null);
@@ -249,32 +140,6 @@ const Sandbox = () => {
     navigator.clipboard.writeText(text);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'running':
-        return 'text-green-600 bg-green-500';
-      case 'paused':
-        return 'text-yellow-600 bg-yellow-500';
-      case 'deleted':
-        return 'text-red-600 bg-red-500';
-      default:
-        return 'text-gray-600 bg-gray-500';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'running':
-        return 'Running';
-      case 'paused':
-        return 'Paused';
-      case 'deleted':
-        return 'Deleted';
-      default:
-        return 'Unknown';
-    }
-  };
-
   const sandboxActions = [
     {
       title: 'View Frontend',
@@ -283,7 +148,7 @@ const Sandbox = () => {
       color: 'from-blue-500 to-cyan-500',
       url: sandbox?.urls.frontend,
       action: () => openUrl(sandbox!.urls.frontend),
-      disabled: sandbox?.status !== 'running'
+      available: true
     },
     {
       title: 'View Backend Admin',
@@ -292,7 +157,7 @@ const Sandbox = () => {
       color: 'from-green-500 to-emerald-500',
       url: `${sandbox?.urls.backend}/admin`,
       action: () => openUrl(`${sandbox!.urls.backend}/admin`),
-      disabled: sandbox?.status !== 'running'
+      available: true
     },
     {
       title: 'Edit Frontend Code',
@@ -301,7 +166,7 @@ const Sandbox = () => {
       color: 'from-purple-500 to-indigo-500',
       url: `${sandbox?.urls.code_server}/?folder=/app/frontend`,
       action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/frontend`),
-      disabled: sandbox?.status !== 'running'
+      available: true
     },
     {
       title: 'Edit Backend Code',
@@ -310,7 +175,7 @@ const Sandbox = () => {
       color: 'from-orange-500 to-red-500',
       url: `${sandbox?.urls.code_server}/?folder=/app/backend`,
       action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/backend`),
-      disabled: sandbox?.status !== 'running'
+      available: true
     }
   ];
 
@@ -499,86 +364,22 @@ const Sandbox = () => {
         ) : (
           /* Sandbox Management Section */
           <div className="space-y-8">
-            {/* Sandbox Info & Controls */}
+            {/* Sandbox Info */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20"
             >
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">Your Sandbox</h2>
                   <p className="text-gray-600">Container: {sandbox.container_name}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${getStatusColor(sandbox.status)} ${sandbox.status === 'running' ? 'animate-pulse' : ''}`}></div>
-                  <span className={`text-sm font-medium ${getStatusColor(sandbox.status).split(' ')[0]}`}>
-                    {getStatusText(sandbox.status)}
-                  </span>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-green-600">Active</span>
                 </div>
               </div>
-
-              {/* Control Buttons */}
-              <div className="flex flex-wrap gap-3">
-                {sandbox.status === 'running' && (
-                  <button
-                    onClick={pauseSandbox}
-                    disabled={pausing}
-                    className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {pausing ? (
-                      <Loader className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Pause className="w-4 h-4" />
-                    )}
-                    {pausing ? 'Pausing...' : 'Pause'}
-                  </button>
-                )}
-
-                {sandbox.status === 'paused' && (
-                  <button
-                    onClick={resumeSandbox}
-                    disabled={resuming}
-                    className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {resuming ? (
-                      <Loader className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Play className="w-4 h-4" />
-                    )}
-                    {resuming ? 'Resuming...' : 'Resume'}
-                  </button>
-                )}
-
-                <button
-                  onClick={resetSandbox}
-                  disabled={resetting || sandbox.status === 'paused'}
-                  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {resetting ? (
-                    <Loader className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <RotateCcw className="w-4 h-4" />
-                  )}
-                  {resetting ? 'Resetting...' : 'Reset to Default'}
-                </button>
-
-                <button
-                  onClick={checkExistingSandbox}
-                  className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-300"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  Refresh Status
-                </button>
-              </div>
-
-              {sandbox.status === 'paused' && (
-                <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-yellow-700 text-sm">
-                    <strong>Note:</strong> Your sandbox is currently paused. Resume it to access your applications and code editor.
-                  </p>
-                </div>
-              )}
             </motion.div>
 
             {/* Available Features */}
@@ -591,48 +392,29 @@ const Sandbox = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className={`group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 transition-all duration-300 ${
-                      action.disabled 
-                        ? 'opacity-60 cursor-not-allowed' 
-                        : 'hover:shadow-xl hover:-translate-y-1 cursor-pointer'
-                    }`}
-                    onClick={action.disabled ? undefined : action.action}
+                    className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-white/20 cursor-pointer"
+                    onClick={action.action}
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${action.color} text-white shadow-lg ${
-                        action.disabled ? 'opacity-75' : 'group-hover:scale-110'
-                      } transition-transform`}>
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${action.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
                         {action.icon}
                       </div>
                       <div className="flex-1">
-                        <h3 className={`text-xl font-bold mb-2 transition-colors ${
-                          action.disabled 
-                            ? 'text-gray-500' 
-                            : 'text-gray-900 group-hover:text-indigo-600'
-                        }`}>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
                           {action.title}
                         </h3>
-                        <p className={`mb-3 ${action.disabled ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {action.description}
-                        </p>
+                        <p className="text-gray-600 mb-3">{action.description}</p>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                           <ExternalLink className="w-4 h-4" />
                           <span className="truncate">{action.url}</span>
                         </div>
-                        {action.title === 'View Backend Admin' && !action.disabled && (
+                        {action.title === 'View Backend Admin' && (
                           <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
                             <div className="flex items-center gap-2 mb-2">
                               <Info className="w-4 h-4 text-blue-600" />
                               <span className="text-sm font-medium text-blue-800">Login Required</span>
                             </div>
                             <p className="text-xs text-blue-700">Use the demo credentials to access the admin panel</p>
-                          </div>
-                        )}
-                        {action.disabled && (
-                          <div className="mt-3 p-2 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-xs text-gray-500">
-                              Available when sandbox is running
-                            </p>
                           </div>
                         )}
                       </div>
@@ -679,23 +461,6 @@ const Sandbox = () => {
                 ))}
               </div>
             </div>
-
-            {/* Reset Warning */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="bg-blue-50 border border-blue-200 rounded-2xl p-6"
-            >
-              <h3 className="text-lg font-bold text-blue-900 mb-2">Reset Sandbox</h3>
-              <p className="text-blue-700 mb-4">
-                Resetting your sandbox will restore all code and data to the default state, undoing any changes you've made. 
-                Your sandbox will remain active, but all customizations will be lost.
-              </p>
-              <p className="text-sm text-blue-600">
-                Use the "Reset to Default" button above to reset your sandbox.
-              </p>
-            </motion.div>
 
             {/* Delete Sandbox */}
             <motion.div 
