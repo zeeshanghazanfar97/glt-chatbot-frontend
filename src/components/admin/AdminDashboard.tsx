@@ -114,7 +114,7 @@ const AdminDashboard: React.FC = () => {
             <div className="inline-flex items-center gap-2 text-sm text-gray-500">
               <span>Available at:</span>
               <a
-                href="https://api.girlzlovetech.org/admin"
+                href="https://glt-backend.glt-sandbox.com/admin"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
