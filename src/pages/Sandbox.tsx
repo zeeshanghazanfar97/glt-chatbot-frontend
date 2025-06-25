@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap } from 'lucide-react';
+import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../services/authService';
@@ -147,7 +147,8 @@ const Sandbox = () => {
       icon: <Globe className="w-6 h-6" />,
       color: 'from-blue-500 to-cyan-500',
       url: sandbox?.urls.frontend,
-      action: () => openUrl(sandbox!.urls.frontend)
+      action: () => openUrl(sandbox!.urls.frontend),
+      available: true
     },
     {
       title: 'View Backend Admin',
@@ -155,7 +156,8 @@ const Sandbox = () => {
       icon: <Database className="w-6 h-6" />,
       color: 'from-green-500 to-emerald-500',
       url: `${sandbox?.urls.backend}/admin`,
-      action: () => openUrl(`${sandbox!.urls.backend}/admin`)
+      action: () => openUrl(`${sandbox!.urls.backend}/admin`),
+      available: true
     },
     {
       title: 'Edit Frontend Code',
@@ -163,7 +165,8 @@ const Sandbox = () => {
       icon: <FileCode className="w-6 h-6" />,
       color: 'from-purple-500 to-indigo-500',
       url: `${sandbox?.urls.code_server}/?folder=/app/frontend`,
-      action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/frontend`)
+      action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/frontend`),
+      available: true
     },
     {
       title: 'Edit Backend Code',
@@ -171,7 +174,18 @@ const Sandbox = () => {
       icon: <Terminal className="w-6 h-6" />,
       color: 'from-orange-500 to-red-500',
       url: `${sandbox?.urls.code_server}/?folder=/app/backend`,
-      action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/backend`)
+      action: () => openUrl(`${sandbox!.urls.code_server}/?folder=/app/backend`),
+      available: true
+    }
+  ];
+
+  const upcomingFeatures = [
+    {
+      title: 'Terminal Access',
+      description: 'Direct command line access to your sandbox environment',
+      icon: <Terminal className="w-6 h-6" />,
+      color: 'from-gray-400 to-gray-500',
+      comingSoon: true
     }
   ];
 
@@ -312,10 +326,16 @@ const Sandbox = () => {
                   <p className="text-sm text-gray-600">Full IDE in your browser</p>
                 </div>
                 
-                <div className="bg-gradient-to-br from-orange-50 to-red-50 p-6 rounded-2xl border border-orange-100">
-                  <Terminal className="w-8 h-8 text-orange-500 mb-3 mx-auto" />
-                  <h3 className="font-semibold text-gray-900 mb-2">Terminal Access</h3>
-                  <p className="text-sm text-gray-600">Command line for advanced tasks</p>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-2xl border border-gray-200 relative">
+                  <Terminal className="w-8 h-8 text-gray-400 mb-3 mx-auto" />
+                  <h3 className="font-semibold text-gray-700 mb-2">Terminal Access</h3>
+                  <p className="text-sm text-gray-500">Command line interface</p>
+                  <div className="absolute top-2 right-2">
+                    <div className="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Soon
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -362,50 +382,91 @@ const Sandbox = () => {
               </div>
             </motion.div>
 
-            {/* Action Buttons */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {sandboxActions.map((action, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-white/20 cursor-pointer"
-                  onClick={action.action}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-xl bg-gradient-to-br ${action.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
-                      {action.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                        {action.title}
-                      </h3>
-                      <p className="text-gray-600 mb-3">{action.description}</p>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <ExternalLink className="w-4 h-4" />
-                        <span className="truncate">{action.url}</span>
+            {/* Available Features */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Available Features</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {sandboxActions.map((action, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-white/20 cursor-pointer"
+                    onClick={action.action}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${action.color} text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                        {action.icon}
                       </div>
-                      {action.title === 'View Backend Admin' && (
-                        <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Info className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm font-medium text-blue-800">Login Required</span>
-                          </div>
-                          <p className="text-xs text-blue-700">Use the demo credentials to access the admin panel</p>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                          {action.title}
+                        </h3>
+                        <p className="text-gray-600 mb-3">{action.description}</p>
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <ExternalLink className="w-4 h-4" />
+                          <span className="truncate">{action.url}</span>
                         </div>
-                      )}
+                        {action.title === 'View Backend Admin' && (
+                          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Info className="w-4 h-4 text-blue-600" />
+                              <span className="text-sm font-medium text-blue-800">Login Required</span>
+                            </div>
+                            <p className="text-xs text-blue-700">Use the demo credentials to access the admin panel</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Coming Soon Features */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Coming Soon</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {upcomingFeatures.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-gray-200 relative overflow-hidden"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${feature.color} text-white shadow-lg opacity-75`}>
+                        {feature.icon}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-xl font-bold text-gray-700">{feature.title}</h3>
+                          <div className="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            Coming Soon
+                          </div>
+                        </div>
+                        <p className="text-gray-500 mb-3">{feature.description}</p>
+                        <p className="text-sm text-gray-400 italic">
+                          This feature is currently in development and will be available in a future update.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Overlay to indicate disabled state */}
+                    <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"></div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             {/* Delete Sandbox */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.7 }}
               className="bg-red-50 border border-red-200 rounded-2xl p-6"
             >
               <h3 className="text-lg font-bold text-red-900 mb-2">Danger Zone</h3>
