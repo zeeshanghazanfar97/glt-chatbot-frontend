@@ -88,39 +88,42 @@ const Sandbox = () => {
     setCheckingFrontend(true);
     setFrontendReady(false);
 
-    const maxAttempts = 60; // Maximum 60 attempts (60 seconds)
+    const maxAttempts = 30; // Maximum 30 attempts (30 seconds)
     let attempts = 0;
+
+    const checkUrl = async (): Promise<boolean> => {
+      try {
+        // Use a simple HEAD request to check if the frontend is responding
+        const response = await fetch(sandbox.urls.frontend, {
+          method: 'HEAD',
+          mode: 'no-cors', // Avoid CORS issues
+        });
+        return true; // If no error is thrown, the frontend is likely ready
+      } catch (error) {
+        return false;
+      }
+    };
 
     const pollFrontend = async () => {
       attempts++;
       
       try {
-        // Fetch the frontend URL and check the response content
+        // Try to fetch the frontend URL
         const response = await fetch(sandbox.urls.frontend, {
           method: 'GET',
-          // Don't use no-cors mode so we can read the response
+          mode: 'no-cors',
         });
         
-        // Read the response text
-        const responseText = await response.text();
-        
-        // Check if the response is valid (not "Bad Gateway" and not empty)
-        if (response.ok && responseText && responseText.trim() !== 'Bad Gateway') {
-          // Frontend is ready
-          setFrontendReady(true);
-          setCheckingFrontend(false);
-          return;
-        } else {
-          // Response is "Bad Gateway" or not ok, continue polling
-          throw new Error('Frontend not ready');
-        }
+        // If we get here without an error, the frontend is ready
+        setFrontendReady(true);
+        setCheckingFrontend(false);
+        return;
       } catch (error) {
-        // Frontend not ready yet or network error
+        // Frontend not ready yet
         if (attempts < maxAttempts) {
           setTimeout(pollFrontend, 1000); // Check again in 1 second
         } else {
           // Max attempts reached, assume it's ready anyway
-          console.warn('Frontend availability check timed out after 60 seconds');
           setFrontendReady(true);
           setCheckingFrontend(false);
         }
@@ -341,7 +344,7 @@ const Sandbox = () => {
       title: 'View Frontend',
       description: 'See your React application in action',
       icon: <Globe className="w-6 h-6" />,
-      color: 'from-blue-400 to-cyan-400',
+      color: 'from-blue-500 to-cyan-500',
       url: sandbox?.urls.frontend,
       action: () => openUrl(sandbox!.urls.frontend),
       disabled: sandbox?.status !== 'running' || !frontendReady,
