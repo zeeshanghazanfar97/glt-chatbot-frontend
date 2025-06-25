@@ -17,7 +17,7 @@ const Products = () => {
         const tokens = authService.getTokens();
         if (!tokens?.access) throw new Error('Not authenticated');
 
-        const response = await axios.get('https://api.girlzlovetech.org/api/products/', {
+        const response = await axios.get('https://glt-backend.glt-sandbox.com/api/products/', {
           headers: {
             Authorization: `Bearer ${tokens.access}`,
           },
