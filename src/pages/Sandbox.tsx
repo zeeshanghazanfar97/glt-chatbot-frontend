@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap, Clock, Pause, RotateCcw, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap, Clock, Pause, RotateCcw, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../services/authService';
@@ -27,11 +27,23 @@ const Sandbox = () => {
   const [resetting, setResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [frontendReady, setFrontendReady] = useState(false);
+  const [checkingFrontend, setCheckingFrontend] = useState(false);
 
   // Check for existing sandbox on component mount
   useEffect(() => {
     checkExistingSandbox();
   }, []);
+
+  // Check frontend availability when sandbox status changes to running
+  useEffect(() => {
+    if (sandbox?.status === 'running' && sandbox.urls.frontend) {
+      checkFrontendAvailability();
+    } else {
+      setFrontendReady(false);
+      setCheckingFrontend(false);
+    }
+  }, [sandbox?.status, sandbox?.urls.frontend]);
 
   const checkExistingSandbox = async () => {
     setLoading(true);
@@ -70,6 +82,58 @@ const Sandbox = () => {
     }
   };
 
+  const checkFrontendAvailability = async () => {
+    if (!sandbox?.urls.frontend) return;
+
+    setCheckingFrontend(true);
+    setFrontendReady(false);
+
+    const maxAttempts = 30; // Maximum 30 attempts (30 seconds)
+    let attempts = 0;
+
+    const checkUrl = async (): Promise<boolean> => {
+      try {
+        // Use a simple HEAD request to check if the frontend is responding
+        const response = await fetch(sandbox.urls.frontend, {
+          method: 'HEAD',
+          mode: 'no-cors', // Avoid CORS issues
+        });
+        return true; // If no error is thrown, the frontend is likely ready
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const pollFrontend = async () => {
+      attempts++;
+      
+      try {
+        // Try to fetch the frontend URL
+        const response = await fetch(sandbox.urls.frontend, {
+          method: 'GET',
+          mode: 'no-cors',
+        });
+        
+        // If we get here without an error, the frontend is ready
+        setFrontendReady(true);
+        setCheckingFrontend(false);
+        return;
+      } catch (error) {
+        // Frontend not ready yet
+        if (attempts < maxAttempts) {
+          setTimeout(pollFrontend, 1000); // Check again in 1 second
+        } else {
+          // Max attempts reached, assume it's ready anyway
+          setFrontendReady(true);
+          setCheckingFrontend(false);
+        }
+      }
+    };
+
+    // Start polling
+    pollFrontend();
+  };
+
   const createSandbox = async () => {
     setCreating(true);
     setError(null);
@@ -91,7 +155,7 @@ const Sandbox = () => {
       );
 
       setSandbox(response.data);
-      setSuccess('Sandbox created successfully! Your development environment is ready.');
+      setSuccess('Sandbox created successfully! Your development environment is starting up...');
     } catch (err: any) {
       console.error('Sandbox creation error:', err);
       setError(
@@ -161,7 +225,7 @@ const Sandbox = () => {
 
       // Update sandbox status to running
       setSandbox(prev => prev ? { ...prev, status: 'running' } : null);
-      setSuccess(response.data.message || 'Sandbox resumed successfully!');
+      setSuccess(response.data.message || 'Sandbox resumed successfully! Frontend is starting up...');
     } catch (err: any) {
       console.error('Sandbox resume error:', err);
       setError(
@@ -283,7 +347,9 @@ const Sandbox = () => {
       color: 'from-blue-500 to-cyan-500',
       url: sandbox?.urls.frontend,
       action: () => openUrl(sandbox!.urls.frontend),
-      disabled: sandbox?.status !== 'running'
+      disabled: sandbox?.status !== 'running' || !frontendReady,
+      loading: sandbox?.status === 'running' && checkingFrontend,
+      statusText: checkingFrontend ? 'Starting up...' : !frontendReady ? 'Waiting for frontend...' : 'Ready'
     },
     {
       title: 'View Backend Admin',
@@ -579,6 +645,17 @@ const Sandbox = () => {
                   </p>
                 </div>
               )}
+
+              {checkingFrontend && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Loader className="w-4 h-4 text-blue-600 animate-spin" />
+                    <p className="text-blue-700 text-sm">
+                      <strong>Starting up:</strong> Your frontend is initializing. This usually takes 10-30 seconds...
+                    </p>
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {/* Available Features */}
@@ -601,17 +678,44 @@ const Sandbox = () => {
                     <div className="flex items-start gap-4">
                       <div className={`p-3 rounded-xl bg-gradient-to-br ${action.color} text-white shadow-lg ${
                         action.disabled ? 'opacity-75' : 'group-hover:scale-110'
-                      } transition-transform`}>
+                      } transition-transform relative`}>
+                        {action.loading && (
+                          <div className="absolute inset-0 bg-white/20 rounded-xl flex items-center justify-center">
+                            <Loader className="w-4 h-4 animate-spin" />
+                          </div>
+                        )}
                         {action.icon}
                       </div>
                       <div className="flex-1">
-                        <h3 className={`text-xl font-bold mb-2 transition-colors ${
-                          action.disabled 
-                            ? 'text-gray-500' 
-                            : 'text-gray-900 group-hover:text-indigo-600'
-                        }`}>
-                          {action.title}
-                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className={`text-xl font-bold transition-colors ${
+                            action.disabled 
+                              ? 'text-gray-500' 
+                              : 'text-gray-900 group-hover:text-indigo-600'
+                          }`}>
+                            {action.title}
+                          </h3>
+                          {action.title === 'View Frontend' && sandbox.status === 'running' && (
+                            <div className="flex items-center gap-1">
+                              {frontendReady ? (
+                                <div className="flex items-center gap-1 text-green-600">
+                                  <CheckCircle className="w-4 h-4" />
+                                  <span className="text-xs font-medium">Ready</span>
+                                </div>
+                              ) : checkingFrontend ? (
+                                <div className="flex items-center gap-1 text-blue-600">
+                                  <Loader className="w-4 h-4 animate-spin" />
+                                  <span className="text-xs font-medium">Starting...</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1 text-yellow-600">
+                                  <AlertCircle className="w-4 h-4" />
+                                  <span className="text-xs font-medium">Waiting</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         <p className={`mb-3 ${action.disabled ? 'text-gray-400' : 'text-gray-600'}`}>
                           {action.description}
                         </p>
@@ -631,7 +735,9 @@ const Sandbox = () => {
                         {action.disabled && (
                           <div className="mt-3 p-2 bg-gray-50 rounded-lg border border-gray-200">
                             <p className="text-xs text-gray-500">
-                              Available when sandbox is running
+                              {action.title === 'View Frontend' && checkingFrontend 
+                                ? 'Frontend is starting up...' 
+                                : 'Available when sandbox is running'}
                             </p>
                           </div>
                         )}
