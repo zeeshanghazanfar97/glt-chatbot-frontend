@@ -33,7 +33,7 @@ const Sandbox = () => {
       if (!tokens?.access) throw new Error('Not authenticated');
 
       const response = await axios.post(
-        'https://glt-backend.glt-sandbox.com/api/sandbox',
+        'https://glt-backend.glt-sandbox.com/api/sandbox/create/',
         {},
         {
           headers: {
