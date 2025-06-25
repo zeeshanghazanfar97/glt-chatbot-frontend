@@ -2,7 +2,7 @@ import axios from 'axios';
 import { UserType, DashboardDataType } from '../types';
 import authService from './authService';
 
-const API_BASE_URL = 'https://api.girlzlovetech.org';
+const API_BASE_URL = 'https://glt-backend.glt-sandbox.com';
 
 const userService = {
   async getUserInfo(): Promise<UserType> {
