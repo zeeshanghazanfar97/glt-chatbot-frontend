@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut } from 'lucide-react';
+import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut, Code } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -18,6 +18,12 @@ const getMenuItems = (isAdmin: boolean) => {
       icon: <LayoutDashboard size={20} />,
       label: 'Dashboard',
       path: '/dashboard',
+    },
+    {
+      id: 'sandbox',
+      icon: <Code size={20} />,
+      label: 'Sandbox',
+      path: '/sandbox',
     },
     {
       id: 'hygiene',
