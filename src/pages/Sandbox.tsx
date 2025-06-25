@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info } from 'lucide-react';
+import { ArrowLeft, Code, Globe, Database, Edit, Trash2, Loader, ExternalLink, Play, Terminal, FileCode, Key, Info, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../services/authService';
@@ -208,48 +208,45 @@ const Sandbox = () => {
           </div>
         </div>
 
-        {/* Login Information Banner */}
+        {/* Real-time Development Banner */}
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6"
+          className="mb-6 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-6"
         >
           <div className="flex items-start gap-4">
-            <div className="p-2 bg-blue-100 rounded-xl">
-              <Key className="w-6 h-6 text-blue-600" />
+            <div className="p-2 bg-emerald-100 rounded-xl">
+              <Zap className="w-6 h-6 text-emerald-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-blue-900 mb-2">Demo Login Credentials</h3>
-              <p className="text-blue-700 mb-4">Use these credentials to access your Django admin panel and frontend:</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white/60 rounded-xl p-4 border border-blue-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-blue-800">Email:</span>
-                    <button
-                      onClick={() => copyToClipboard('demo@example.com')}
-                      className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <code className="text-blue-900 font-mono bg-blue-50 px-2 py-1 rounded text-sm">demo@example.com</code>
-                </div>
-                <div className="bg-white/60 rounded-xl p-4 border border-blue-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-blue-800">Password:</span>
-                    <button
-                      onClick={() => copyToClipboard('demo')}
-                      className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <code className="text-blue-900 font-mono bg-blue-50 px-2 py-1 rounded text-sm">demo</code>
-                </div>
-              </div>
+              <h3 className="text-lg font-bold text-emerald-900 mb-2">Live Development Environment</h3>
+              <p className="text-emerald-700 leading-relaxed">
+                Your sandbox features instant hot-reload capabilities. Any changes you make to your frontend or backend code 
+                are automatically reflected in real-time without requiring manual builds, deployments, or server restarts. 
+                Simply save your files and see the changes instantly!
+              </p>
             </div>
           </div>
         </motion.div>
+
+        {/* Minimal Login Information */}
+        {sandbox && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-gray-50 border border-gray-200 rounded-xl p-4"
+          >
+            <div className="flex items-center gap-3">
+              <Key className="w-4 h-4 text-gray-500" />
+              <div className="flex-1">
+                <span className="text-sm text-gray-600">Demo credentials: </span>
+                <code className="text-xs bg-white px-2 py-1 rounded border text-gray-700">demo@example.com</code>
+                <span className="text-gray-400 mx-2">•</span>
+                <code className="text-xs bg-white px-2 py-1 rounded border text-gray-700">demo</code>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Status Messages */}
         <AnimatePresence>
@@ -395,7 +392,7 @@ const Sandbox = () => {
                             <Info className="w-4 h-4 text-blue-600" />
                             <span className="text-sm font-medium text-blue-800">Login Required</span>
                           </div>
-                          <p className="text-xs text-blue-700">Use the demo credentials above to access the admin panel</p>
+                          <p className="text-xs text-blue-700">Use the demo credentials to access the admin panel</p>
                         </div>
                       )}
                     </div>
