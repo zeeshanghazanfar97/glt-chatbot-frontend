@@ -25,6 +25,11 @@ const BrandingAnimation: React.FC = () => {
       description: ''
     },
     {
+      id: 'applications',
+      title: 'Brand Applications',
+      description: 'How our brand comes to life across digital platforms and educational materials'
+    },
+    {
       id: 'color-palette',
       title: 'Color System',
       description: 'Warm, empowering colors that inspire confidence, growth, and technological innovation'
@@ -38,11 +43,6 @@ const BrandingAnimation: React.FC = () => {
       id: 'icons',
       title: 'Icon Language',
       description: 'Consistent iconography representing wellness, technology, community, and empowerment'
-    },
-    {
-      id: 'applications',
-      title: 'Brand Applications',
-      description: 'How our brand comes to life across digital platforms and educational materials'
     }
   ];
 
