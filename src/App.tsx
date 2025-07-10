@@ -23,6 +23,7 @@ import Sandbox from './pages/Sandbox';
 import SponsorDashboard from './pages/SponsorDashboard';
 import SponsorHygieneKits from './pages/SponsorHygieneKits';
 import BrandingAnimation from './pages/BrandingAnimation';
+import OutroAnimation from './pages/OutroAnimation';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -47,6 +48,7 @@ const AnimatedRoutes = () => {
         <Route path="/wellness-confidence" element={<WellnessConfidence />} />
         <Route path="/products" element={<Products />} />
         <Route path="/branding" element={<BrandingAnimation />} />
+        <Route path="/outro" element={<OutroAnimation />} />
         <Route 
           path="/app" 
           element={

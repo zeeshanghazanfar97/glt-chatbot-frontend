@@ -55,6 +55,12 @@ const getMenuItems = (isAdmin: boolean, userType?: string) => {
       label: 'Brand Animation',
       path: '/branding',
     },
+    {
+      id: 'outro',
+      icon: <Palette size={20} />,
+      label: 'Outro Animation',
+      path: '/outro',
+    },
   ];
 
   // Add sponsor page for sponsor users
