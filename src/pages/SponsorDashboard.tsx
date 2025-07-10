@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, DollarSign, Users, Target, TrendingUp, Calendar, Gift, Heart, Star } from 'lucide-react';
+import { ArrowLeft, DollarSign, Users, Target, TrendingUp, Calendar, Gift, Heart, Star, Package, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const SponsorDashboard: React.FC = () => {
@@ -64,33 +64,52 @@ const SponsorDashboard: React.FC = () => {
         </div>
 
         {/* Coming Soon Hero Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-white/20">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-              <DollarSign className="w-12 h-12 text-white" />
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4 }}
+            className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-8 text-white shadow-xl cursor-pointer"
+            onClick={() => navigate('/sponsor/hygiene-kits')}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                <Package className="w-8 h-8 text-white" />
+              </div>
+              <ArrowRight className="w-6 h-6 text-white/80" />
             </div>
-            
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Sponsor Dashboard
-              <span className="block text-2xl text-blue-600 mt-2">Coming Soon</span>
-            </h2>
-            
-            <p className="text-gray-600 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-              We're building a comprehensive dashboard that will allow you to track your sponsorship impact, 
-              manage donations, and see how you're making a difference in young women's lives. This powerful 
-              platform will provide detailed analytics, progress tracking, and direct communication tools.
+            <h3 className="text-2xl font-bold mb-3">Sponsor Hygiene Kits</h3>
+            <p className="text-white/90 mb-4">
+              Provide essential hygiene supplies to students in need. Choose schools, 
+              select kit types, and make an immediate impact.
             </p>
-
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-6 py-3 rounded-xl font-semibold">
-              <Heart className="w-5 h-5" />
-              Thank you for your support!
+            <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-xl text-sm font-semibold">
+              <Gift className="w-4 h-4" />
+              Available Now
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/20"
+          >
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+              <DollarSign className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Full Dashboard</h3>
+            <p className="text-gray-600 mb-4">
+              Comprehensive sponsorship management, analytics, and impact tracking 
+              tools are coming soon.
+            </p>
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-xl text-sm font-semibold">
+              <Calendar className="w-4 h-4" />
+              Coming Soon
+            </div>
+          </motion.div>
+        </div>
 
         {/* Upcoming Features Grid */}
         <div className="mb-12">

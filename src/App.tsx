@@ -21,6 +21,7 @@ import WellnessConfidence from './pages/WellnessConfidence';
 import Products from './pages/Products';
 import Sandbox from './pages/Sandbox';
 import SponsorDashboard from './pages/SponsorDashboard';
+import SponsorHygieneKits from './pages/SponsorHygieneKits';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -126,6 +127,14 @@ const AnimatedRoutes = () => {
                   <SponsorDashboard />
                 </div>
               </div>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/sponsor/hygiene-kits" 
+          element={
+            <ProtectedRoute>
+              <SponsorHygieneKits />
             </ProtectedRoute>
           } 
         />
