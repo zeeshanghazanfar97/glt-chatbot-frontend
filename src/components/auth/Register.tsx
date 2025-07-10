@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { RegisterData, UserType } from '../../services/authService';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const overlayVariants = {
   initial: { opacity: 0, y: -20 },
@@ -21,6 +22,11 @@ interface RegisterFormData extends RegisterData {
   confirmPassword: string;
 }
 
+interface SchoolsResponse {
+  message: string;
+  schools: string[];
+}
+
 const userTypes: { value: UserType; label: string }[] = [
   { value: 'student', label: 'Student' },
   { value: 'parent', label: 'Parent' },
@@ -34,6 +40,9 @@ const gradeOptions = Array.from({ length: 8 }, (_, i) => i + 5);
 const Register: React.FC = () => {
   const { register: registerUser, error } = useAuth();
   const navigate = useNavigate();
+  const [schools, setSchools] = useState<string[]>([]);
+  const [loadingSchools, setLoadingSchools] = useState(false);
+  const [schoolsError, setSchoolsError] = useState<string | null>(null);
   
   const { register, handleSubmit, formState: { errors }, watch, control } = useForm<RegisterFormData>({
     defaultValues: {
@@ -43,6 +52,28 @@ const Register: React.FC = () => {
   
   const password = watch('password', '');
   const userType = watch('user_type');
+
+  // Fetch schools when component mounts
+  useEffect(() => {
+    const fetchSchools = async () => {
+      setLoadingSchools(true);
+      setSchoolsError(null);
+      
+      try {
+        const response = await axios.get<SchoolsResponse>('https://glt-backend.glt-sandbox.com/api/schools/');
+        setSchools(response.data.schools);
+      } catch (err: any) {
+        console.error('Failed to fetch schools:', err);
+        setSchoolsError('Failed to load schools. You can still register by typing your school name.');
+        // Fallback to empty array so the form still works
+        setSchools([]);
+      } finally {
+        setLoadingSchools(false);
+      }
+    };
+
+    fetchSchools();
+  }, []);
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
@@ -222,11 +253,45 @@ const Register: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       School
                     </label>
-                    <input
-                      type="text"
-                      {...register('student_school', { required: 'School is required' })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
-                      placeholder="School name"
+                    <Controller
+                      name="student_school"
+                      control={control}
+                      rules={{ required: 'School is required' }}
+                      render={({ field }) => (
+                        <div className="relative">
+                          {loadingSchools ? (
+                            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
+                              <div className="flex items-center gap-2 text-gray-500">
+                                <div className="w-4 h-4 border-2 border-gray-300 border-t-pink-500 rounded-full animate-spin"></div>
+                                <span className="text-sm">Loading schools...</span>
+                              </div>
+                            </div>
+                          ) : schools.length > 0 ? (
+                            <select
+                              {...field}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                            >
+                              <option value="">Select School</option>
+                              {schools.map(school => (
+                                <option key={school} value={school}>
+                                  {school}
+                                </option>
+                              ))}
+                              <option value="other">Other (not listed)</option>
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              {...field}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-300 focus:border-pink-300"
+                              placeholder="Enter school name"
+                            />
+                          )}
+                          {schoolsError && (
+                            <p className="mt-1 text-xs text-amber-600">{schoolsError}</p>
+                          )}
+                        </div>
+                      )}
                     />
                     {errors.student_school && (
                       <p className="mt-1 text-sm text-red-600">{errors.student_school.message}</p>
