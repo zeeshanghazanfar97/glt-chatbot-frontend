@@ -490,9 +490,6 @@ const BrandingAnimation: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <Heart className="w-16 h-16 text-pink-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Our Core Values</h2>
-            <p className="text-gray-600">The principles that drive our mission and shape our community</p>
           </motion.div>
 
           <div className="grid grid-cols-2 gap-8">
