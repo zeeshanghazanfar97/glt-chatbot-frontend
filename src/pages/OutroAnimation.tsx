@@ -470,15 +470,37 @@ const OutroAnimation: React.FC = () => {
       {/* Replay button */}
       <AnimatePresence>
         {showReplay && (
-          <motion.button
+          <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            onClick={resetAnimation}
-            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-semibold px-8 py-4 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 z-20"
+            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-4 z-20"
           >
-            Replay Animation
-          </motion.button>
+            <button
+              onClick={resetAnimation}
+              className="bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-semibold px-8 py-4 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              Replay Animation
+            </button>
+            
+            {/* Developer Reference */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-center"
+            >
+              <p className="text-xs text-gray-500 mb-1">Crafted with ❤️ by</p>
+              <a
+                href="https://zeeit.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-pink-500 hover:text-pink-600 font-medium transition-colors underline decoration-pink-300 hover:decoration-pink-500"
+              >
+                ZeeIT Solutions
+              </a>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
