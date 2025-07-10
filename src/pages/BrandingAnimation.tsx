@@ -772,21 +772,6 @@ const BrandingAnimation: React.FC = () => {
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* Space bar instruction */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="mt-16 text-center"
-        >
-          <div className="inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-lg border border-white/20">
-            <div className="w-12 h-6 bg-gray-200 rounded border-2 border-gray-300 flex items-center justify-center text-xs font-mono text-gray-600">
-              SPACE
-            </div>
-            <span className="text-gray-600 font-medium">Press to continue</span>
-          </div>
-        </motion.div>
       </div>
 
       {/* Sequence indicator (minimal) */}
