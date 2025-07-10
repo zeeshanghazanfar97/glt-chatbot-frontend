@@ -41,6 +41,7 @@ export interface BadgeType {
 export interface UserType {
   name: string;
   is_admin: boolean;
+  user_type: 'student' | 'teacher' | 'parent' | 'community_member' | 'sponsor';
 }
 
 export interface DashboardDataType {

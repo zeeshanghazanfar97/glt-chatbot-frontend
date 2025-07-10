@@ -20,6 +20,7 @@ import HygieneTips from './pages/HygieneTips';
 import WellnessConfidence from './pages/WellnessConfidence';
 import Products from './pages/Products';
 import Sandbox from './pages/Sandbox';
+import SponsorDashboard from './pages/SponsorDashboard';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -106,6 +107,23 @@ const AnimatedRoutes = () => {
                 />
                 <div className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'}`}>
                   <AdminDashboard />
+                </div>
+              </div>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/sponsor" 
+          element={
+            <ProtectedRoute>
+              <div className="min-h-[100dvh] bg-gradient-to-b from-pink-50 to-white flex">
+                <Sidebar 
+                  isOpen={isSidebarOpen} 
+                  onClose={() => setIsSidebarOpen(false)}
+                  onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                />
+                <div className={`flex-grow transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'lg:ml-16'}`}>
+                  <SponsorDashboard />
                 </div>
               </div>
             </ProtectedRoute>

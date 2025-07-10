@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut, Code } from 'lucide-react';
+import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut, Code, DollarSign } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
-const getMenuItems = (isAdmin: boolean) => {
+const getMenuItems = (isAdmin: boolean, userType?: string) => {
   const baseItems = [
     {
       id: 'dashboard',
@@ -51,6 +51,16 @@ const getMenuItems = (isAdmin: boolean) => {
     },
   ];
 
+  // Add sponsor page for sponsor users
+  if (userType === 'sponsor') {
+    baseItems.splice(1, 0, {
+      id: 'sponsor',
+      icon: <DollarSign size={20} />,
+      label: 'Sponsor Dashboard',
+      path: '/sponsor',
+    });
+  }
+
   if (isAdmin) {
     return [
       baseItems[0],
@@ -72,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onToggle }) => {
   const location = useLocation();
   const { logout } = useAuth();
   const { user } = useUser();
-  const menuItems = getMenuItems(user?.is_admin || false);
+  const menuItems = getMenuItems(user?.is_admin || false, user?.user_type);
 
   const handleLogout = async () => {
     await logout();
