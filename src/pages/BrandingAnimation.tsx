@@ -16,8 +16,8 @@ const BrandingAnimation: React.FC = () => {
   const animations = [
     {
       id: 'logo-reveal',
-      title: 'Logo & Identity',
-      description: 'Our heart-centered logo represents love for technology and empowerment of young women'
+      title: '',
+      description: ''
     },
     {
       id: 'color-palette',
