@@ -26,8 +26,8 @@ const BrandingAnimation: React.FC = () => {
     },
     {
       id: 'applications',
-      title: 'Brand Applications',
-      description: 'How our brand comes to life across digital platforms and educational materials'
+      title: '',
+      description: ''
     },
     {
       id: 'color-palette',
@@ -743,12 +743,6 @@ const BrandingAnimation: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            {animations[currentAnimation].title}
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {animations[currentAnimation].description}
-          </p>
         </motion.div>
 
         {/* Animation Container */}
