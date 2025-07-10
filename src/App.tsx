@@ -46,6 +46,7 @@ const AnimatedRoutes = () => {
         <Route path="/hygiene-tips" element={<HygieneTips />} />
         <Route path="/wellness-confidence" element={<WellnessConfidence />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/branding" element={<BrandingAnimation />} />
         <Route 
           path="/app" 
           element={
@@ -139,7 +140,6 @@ const AnimatedRoutes = () => {
             </ProtectedRoute>
           } 
         />
-        <Route path="/branding" element={<BrandingAnimation />} />
         <Route path="*" element={<Navigate to="/\" replace />} />
       </Routes>
     </AnimatePresence>
