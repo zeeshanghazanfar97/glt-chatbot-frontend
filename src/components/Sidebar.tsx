@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut, Code, DollarSign } from 'lucide-react';
+import { MessageSquare, ShoppingBag, Heart, Smile, ChevronRight, LayoutDashboard, Settings, LogOut, Code, DollarSign, Palette } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -48,6 +48,12 @@ const getMenuItems = (isAdmin: boolean, userType?: string) => {
       icon: <Smile size={20} />,
       label: 'Wellness & Confidence',
       path: '/wellness-confidence',
+    },
+    {
+      id: 'branding',
+      icon: <Palette size={20} />,
+      label: 'Brand Animation',
+      path: '/branding',
     },
   ];
 

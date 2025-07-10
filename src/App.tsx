@@ -22,6 +22,7 @@ import Products from './pages/Products';
 import Sandbox from './pages/Sandbox';
 import SponsorDashboard from './pages/SponsorDashboard';
 import SponsorHygieneKits from './pages/SponsorHygieneKits';
+import BrandingAnimation from './pages/BrandingAnimation';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -138,6 +139,7 @@ const AnimatedRoutes = () => {
             </ProtectedRoute>
           } 
         />
+        <Route path="/branding" element={<BrandingAnimation />} />
         <Route path="*" element={<Navigate to="/\" replace />} />
       </Routes>
     </AnimatePresence>
