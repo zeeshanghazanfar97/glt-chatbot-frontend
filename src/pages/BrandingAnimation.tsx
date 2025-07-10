@@ -36,8 +36,8 @@ const BrandingAnimation: React.FC = () => {
     },
     {
       id: 'brand-values',
-      title: 'Core Values',
-      description: 'The fundamental principles that guide our mission and shape our community'
+      title: '',
+      description: ''
     },
     {
       id: 'applications',
